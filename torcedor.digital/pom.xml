@@ -63,7 +63,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>bootwildfly.Application</mainClass>
+					<mainClass>servidor.torcedor.digital.App</mainClass>
 					<layout>ZIP</layout>
 				</configuration>
 				<executions>
