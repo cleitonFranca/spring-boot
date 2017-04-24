@@ -27,5 +27,6 @@ public class HelloController {
 		List<Usuario> records = repository.findAll();
 		return records.toString();
 	}
-
+	
+	
 }
