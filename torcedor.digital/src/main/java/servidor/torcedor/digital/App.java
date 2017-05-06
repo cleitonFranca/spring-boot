@@ -1,11 +1,10 @@
 package servidor.torcedor.digital;
 
+import java.io.File;
+
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.system.ApplicationPidFileWriter;
 
 
 /**
@@ -15,6 +14,10 @@ import org.springframework.context.annotation.Configuration;
 @SpringBootApplication
 public class App {
 	public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
+		SpringApplication springApplication = new SpringApplication(App.class);
+		springApplication.addListeners(new ApplicationPidFileWriter(new File("/home/cleiton/PID")));
+		springApplication.run(args);
+		
+		
 	}
 }
