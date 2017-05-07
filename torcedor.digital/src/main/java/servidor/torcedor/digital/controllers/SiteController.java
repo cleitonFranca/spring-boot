@@ -31,9 +31,8 @@ public class SiteController {
 	private UsuarioRepository repository;
 
 	@RequestMapping("/")
-	@ResponseBody
 	public String home() {
-		return "<center>Torcedor Digital<br>Aguarde ...</center>";
+		return "site";
 	}
 
 	@RequestMapping("/usuarios")
@@ -52,38 +51,14 @@ public class SiteController {
         if (logout != null)
             model.addAttribute("message", "You have been logged out successfully.");
 
-        return "login";
+        return "loginForm";
 		
 		
 
 		
 	}
 	
-	
-	@SuppressWarnings("static-access")
-	@RequestMapping("/login")
-	public String login(Model model, HttpServletRequest request, HttpServletResponse respose) {
-		
-		
-	
-		
-		List<Usuario> usuarios = repository.findAll();
-		
-		model.addAttribute("users_json", convertObjectToJson(usuarios));
-		
-		
-		
-		
-		
-		
-		
-		logger.info("Teste de logging");
-		
-		
-		return "loginForm";
-		
-	}
-	
+
 	public static String convertObjectToJson(Object obj) {
         String result = "";
         try {

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
@@ -29,6 +30,9 @@ public class AppTest {
 	
 	@Autowired
 	private EntityManager em;
+	
+	@Autowired
+	private UsuarioDAO dao;
 	
 	/**
 	 * teste para saber se o repositorio está funcionando
@@ -53,6 +57,21 @@ public class AppTest {
 		System.out.println(usuario);
 		
 		assertTrue(usuario!=null);
+	}
+	
+	@Test
+	public void test_usuarioDAO() {
+		
+		Usuario u = new Usuario();
+		u.setEmail("cleiton@teste.com");
+		u.setSenha("123456");
+		
+		Usuario usuario = dao.buscaUsuarioPorEmailSenha(u);
+		
+		
+		System.out.println(usuario);
+		
+		
 	}
 	
 

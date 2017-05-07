@@ -1,0 +1,26 @@
+#include("/template/header.vm") 
+#include( "/css/login.css.vm" )
+
+<div class=id= "" tabindex="-1" role="" aria-labelledby=""
+	aria-hidden="" style="margin-top:15%">
+	<div class="modal-dialog">
+		<div class="loginmodal-container">
+			<h1>Acesso administrativo</h1>
+			<br>
+			$!error
+			<form method="POST" action="/login">
+				<input type="email" name="email" required="required" placeholder="E-mail"> 
+				<input type="password" name="senha" required="required" placeholder="Senha"> 
+				<input type="submit" name="login" class="login loginmodal-submit" value="Login">
+			</form>
+
+			<div class="login-help">
+				<a href="#">Registre-se</a> ou <a href="#">recuperar senha</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
