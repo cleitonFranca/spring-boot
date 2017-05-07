@@ -1,0 +1,7 @@
+
+<form method="POST" action="/recuperarSenhaPorEmail">
+	<input type="email" name="email" required="required" placeholder="E-mail">  
+	<input type="submit" name="login" class="login loginmodal-submit" value="Login">
+</form>
+
+<p>$!senha</p>

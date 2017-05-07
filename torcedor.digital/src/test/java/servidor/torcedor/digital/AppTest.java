@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManager;
 
+import org.apache.velocity.app.Velocity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

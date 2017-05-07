@@ -37,4 +37,20 @@ public class UsuarioDAO {
 		}
 	}
 
+	public Usuario recuperarSenha(Usuario u) {
+		
+		try {
+			return (Usuario) em
+					.createNativeQuery("SELECT * FROM usuarios WHERE email=:email", Usuario.class)
+					.setParameter("email", u.getEmail())
+					//.setParameter("senha", CriptyEncode.encodeSha256Hex(u.getSenha()))
+					.getSingleResult();
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+
+			return null;
+		}
+	}
+
 }

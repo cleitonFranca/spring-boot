@@ -38,7 +38,7 @@ public class AdminController {
 		if (!teste) {
 			return "loginForm";
 		}
-		return "site";
+		return "redirect:/";
 	}
 	
 	@RequestMapping("/novoUsuario")
@@ -48,8 +48,31 @@ public class AdminController {
 		
 	}
 	
+	@RequestMapping("/recuperarSenha")
+	public String recuperarSenha() {
+		
+		return "formNovaSenha";
+		
+	}
+	
+	@RequestMapping("/recuperarSenhaPorEmail")
+	public String recuperarSenha(Model model, @ModelAttribute("Usuario") Usuario u, HttpSession session) {
+		
+		try {
+		
+			Usuario usuario = usuarioDao.recuperarSenha(u);
+			
+			model.addAttribute("senha", usuario.getSenha());
+			return "formNovaSenha";
+			
+		} catch (Exception e) {
+			model.addAttribute("senha", "Usuário não existe em nossa base de dados!");
+			return "formNovaSenha";
+		}
+		
+	}
+	
 	@RequestMapping("/cadastrarUsuario")
-	@ResponseBody
 	public String cadastrarUsuario(Model model, @ModelAttribute("Usuario") Usuario u, HttpSession session) throws Exception {
 		
 		Usuario usuario = new Usuario();
@@ -58,13 +81,23 @@ public class AdminController {
 		usuario.setSobreNome(u.getSobreNome());
 		usuario.setEmail(u.getEmail());
 		usuario.setSenha(CriptyEncode.encodeSha256Hex(u.getSenha()));
+		usuario.setTipo("app");
 		
-		Usuario novo = repository.save(usuario);
+		Usuario novo = null;
+		try {
+			novo = repository.save(usuario);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			model.addAttribute("erro", "Este usuário já está cadastrado em nosso sistema!");
+			return "/formNovoUsuario";
+		}
 		
 		if(novo!=null) {
-			return novo.toString();
+			model.addAttribute("sucesso", "Usuário cadastrado com sucesso!");
+			return "/formNovoUsuario";
 		} else {
-			return "Error para criar o usuario";
+			model.addAttribute("error", "Error para criar o usuario!");
+			return "/formNovoUsuario";
 		}
 		
 	}
@@ -76,7 +109,8 @@ public class AdminController {
 			session.setAttribute("id", usuario.getId());
 			session.setAttribute("nome", usuario.getNome());
 			session.setAttribute("email", usuario.getEmail());
-			return "site";
+			session.setAttribute("tipo", usuario.getTipo());
+			return "redirect:/";
 		} else {
 			model.addAttribute("error", "Usuarios não encontrado");
 			return "loginForm";
@@ -86,7 +120,7 @@ public class AdminController {
 	@RequestMapping("/logout")
 	public String logout(Model model, HttpSession session) {
 		session.invalidate();
-		return "site";
+		return "redirect:/";
 	}
 
 	private boolean validarSessao(HttpSession session) {

@@ -8,7 +8,8 @@
     </div
     <div class="row">
         <div class="">
-            xxx
+            $!sucesso
+            $!erro
         </div>
         <div class="">
             <form action="/cadastrarUsuario" method="post" accept-charset="utf-8" class="form" role="form">

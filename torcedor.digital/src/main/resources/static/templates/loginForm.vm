@@ -15,7 +15,7 @@
 			</form>
 
 			<div class="login-help">
-				<a href="#">Registre-se</a> ou <a href="#">recuperar senha</a>
+				<a href="/novoUsuario">Registre-se</a> ou <a href="#">recuperar senha</a>
 			</div>
 		</div>
 	</div>
