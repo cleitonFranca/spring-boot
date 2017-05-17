@@ -1,0 +1,32 @@
+#include("/template/header.vm") 
+#include( "/css/formUsuario.css.vm" )
+##col-sm-offset-3 col-sm-6
+##col-sm-offset-1 col-sm-2
+##col-sm-6
+ <div class="row">
+        <h3 class="">Signup</h3>
+    </div
+    <div class="row">
+        <div class="">
+            $!sucesso
+            $!erro
+        </div>
+        <div class="">
+            <form action="/alterarInfoUsuario" method="post" accept-charset="utf-8" class="form" role="form">
+                <div class="row">
+                    <div class="col-xs-6 col-md-6">
+                        <input type="text" name="nome" value="$!usuario.nome" class="form-control input-lg" placeholder="First Name"  />                        
+                    </div>
+                    <div class="col-xs-6 col-md-6">
+                        <input type="text" name="sobreNome" value="$!usuario.sobreNome" class="form-control input-lg" placeholder="Last Name"  />                        
+                    </div>
+                </div>
+                <input type="text" name="email" value="$!usuario.email" class="form-control input-lg" placeholder="Your Email"  />
+                <input type="password" name="senha" value="" disabled class="form-control input-lg" placeholder="Password"  />
+                <input type="hidden" name="id" value="$!usuario.id" class="form-control input-lg"  />
+                    <br />
+                	<button class="btn btn-lg btn-primary btn-block signup-btn" type="submit">Create my account</button>
+            </form>          
+        </div>
+      </div>
+    </div>

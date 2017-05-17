@@ -1,6 +1,9 @@
 package servidor.torcedor.digital.DAO;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.transaction.Transaction;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +54,38 @@ public class UsuarioDAO {
 
 			return null;
 		}
+	}
+	
+	public Usuario updateUsuario(Usuario u) {
+		
+		if(u!=null) {
+			
+			EntityTransaction tx = em.getTransaction();
+			Usuario usuario = null;
+			
+			try {
+				
+				tx.begin();
+				
+				usuario = em.merge(u);
+				
+				tx.commit();
+				
+				return usuario;
+				
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				tx.rollback();
+			} finally {
+				em.close();
+			}
+			
+			
+			
+		}
+		
+		return null;
+		
 	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -33,9 +34,9 @@ public class AdminController {
 	@RequestMapping("/admin")
 	public String admin(HttpSession session) {
 
-		boolean teste = validarSessao(session);
+		boolean auth = validarSessao(session);
 
-		if (!teste) {
+		if (!auth) {
 			return "loginForm";
 		}
 		return "redirect:/";
@@ -52,23 +53,6 @@ public class AdminController {
 	public String recuperarSenha() {
 		
 		return "formNovaSenha";
-		
-	}
-	
-	@RequestMapping("/recuperarSenhaPorEmail")
-	public String recuperarSenha(Model model, @ModelAttribute("Usuario") Usuario u, HttpSession session) {
-		
-		try {
-		
-			Usuario usuario = usuarioDao.recuperarSenha(u);
-			
-			model.addAttribute("senha", usuario.getSenha());
-			return "formNovaSenha";
-			
-		} catch (Exception e) {
-			model.addAttribute("senha", "Usuário não existe em nossa base de dados!");
-			return "formNovaSenha";
-		}
 		
 	}
 	
@@ -101,6 +85,89 @@ public class AdminController {
 		}
 		
 	}
+	
+	@RequestMapping("/editarUsuario/{idUsuario}")
+	public String editarUsuario(@PathVariable Long idUsuario, Model model) {
+		
+		
+
+		if (idUsuario!=null) {
+			
+			Usuario usuario = repository.findOne(idUsuario);
+			model.addAttribute("usuario", usuario);		
+			
+			return "formEditarUsuario";
+		}
+		
+		model.addAttribute("error", "Usuário não encontrado!");
+		
+		return "formEditarUsuario";
+		
+		
+		
+	}
+	
+	@RequestMapping("/apagarUsuario/{idUsuario}")
+	public String apagarUsuario(@PathVariable Long idUsuario, Model model) {
+		repository.delete(idUsuario);
+		return "redirect:/usuarios";
+	
+	}
+	
+	@RequestMapping("/alterarInfoUsuario")
+	public String alterarInfoUsuario(Model model, @ModelAttribute("Usuario") Usuario u, HttpSession session) throws Exception {
+		
+		Usuario usuario = repository.findOne(u.getId());
+		
+		usuario.setNome(u.getNome());
+		usuario.setSobreNome(u.getSobreNome());
+		usuario.setEmail(u.getEmail());
+		if(u.getSenha()!=null) {
+			usuario.setSenha(CriptyEncode.encodeSha256Hex(u.getSenha()));
+		}
+		
+		usuario.setTipo("app");
+		
+		Usuario update = null;
+		
+		try {
+			
+			update = repository.save(usuario);
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			model.addAttribute("erro", e.getMessage());
+			return "/formEditarUsuario";
+		}
+		
+		if(update!=null) {
+			model.addAttribute("sucesso", "Usuário alterado com sucesso!");
+			return "/formEditarUsuario";
+		} else {
+			model.addAttribute("error", "Error para editar o usuario!");
+			return "/formEditarUsuario";
+		}
+		
+	}
+	
+	@RequestMapping("/recuperarSenhaPorEmail")
+	public String recuperarSenha(Model model, @ModelAttribute("Usuario") Usuario u, HttpSession session) {
+		
+		try {
+		
+			Usuario usuario = usuarioDao.recuperarSenha(u);
+			
+			model.addAttribute("senha", usuario.getSenha());
+			return "formNovaSenha";
+			
+		} catch (Exception e) {
+			model.addAttribute("senha", "Usuário não existe em nossa base de dados!");
+			return "formNovaSenha";
+		}
+		
+	}
+	
+	
 
 	@RequestMapping("/login")
 	public String login(Model model, @ModelAttribute("Usuario") Usuario u, HttpSession session) {
