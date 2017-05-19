@@ -31,14 +31,24 @@ public class JsonTransform {
 		return json;
 	}
 	
-	public static String jsonError(HttpServletResponse res) {
+	/**
+	 * Método para retorno de erro, recebe um modificador da resposta
+	 * o tipo HTTP de error e a mensagem de erro.
+	 * 
+	 * @param res
+	 * @param resposta
+	 * @param msg
+	 * @return
+	 */
+	public static String jsonError(HttpServletResponse res, int resposta, String msg) {
 		try {
-			res.sendError(HttpServletResponse.SC_NOT_FOUND);
+			// altera resposta do cabeçalho
+			res.sendError(resposta, msg);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return String.format("{\"error\" : \"%s\"}", HttpServletResponse.SC_NOT_FOUND);
+		return String.format("{\"error\" : \"%s\", \"erroMsg\" : \"%s\"}", resposta, msg);
 	}
 
 }
