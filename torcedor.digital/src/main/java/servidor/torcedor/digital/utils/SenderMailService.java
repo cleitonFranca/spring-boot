@@ -29,7 +29,7 @@ public class SenderMailService {
     	
     	SimpleMailMessage email = new SimpleMailMessage();
     	email.setFrom("cleiton2281@gmail.com");
-        email.setTo(emailPara);
+        email.setTo("cleiton2281@gmail.com"); // por enquanto que não está liberado no AWS-SES
         //email.setBcc("cleiton2281@gmail.com");
         email.setSubject(titulo);
         email.setText(conteudo);
