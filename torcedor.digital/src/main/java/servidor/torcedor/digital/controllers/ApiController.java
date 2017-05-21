@@ -95,6 +95,7 @@ public class ApiController {
 		
 		try {
 			novo = repository.save(usuario);
+			rankRepo.save(PontuaUsuario.pontuar(novo.getId(), 100.0));
 			json = JsonTransform.jsonUser(novo);
 		} catch (Exception e) {
 			String errorMsg = String.format("O e-mail [%s], já está cadastrado em nossa base de dados!", usuario.getEmail());
