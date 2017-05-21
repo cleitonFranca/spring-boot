@@ -1,25 +1,28 @@
 package servidor.torcedor.digital.controllers;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.base.Strings;
 
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.models.Usuario;
+import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
 import servidor.torcedor.digital.utils.JsonTransform;
+import servidor.torcedor.digital.utils.PassRandom;
+import servidor.torcedor.digital.utils.PontuaUsuario;
+import servidor.torcedor.digital.utils.SenderMailService;
 
 @Controller()
 @RequestMapping("/api")
@@ -31,12 +34,31 @@ public class ApiController {
 
 	@Autowired
 	private UsuarioDAO usuarioDao;
+	
+	@Autowired
+	private RankRepository rankRepo;
+	
+	@Autowired
+    SenderMailService senderMailService;
 
 	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public String apiLogin(@ModelAttribute("Usuario") Usuario u, HttpServletResponse res) {
 	
 		Usuario usuario = usuarioDao.buscaUsuarioPorEmailSenha(u);
+
+		if (usuario == null) {
+			return JsonTransform.jsonError(res, HttpServletResponse.SC_NOT_FOUND, "Usuário não encontrado");
+		} 
+
+		return JsonTransform.jsonUser(usuario);
+	}
+	
+	@RequestMapping(value = "/existe", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String apiExiste(@RequestParam(value="email") String email, HttpServletResponse res) {
+	
+		Usuario usuario = usuarioDao.buscaUsuarioPorEmail(email);
 
 		if (usuario == null) {
 			return JsonTransform.jsonError(res, HttpServletResponse.SC_NOT_FOUND, "Usuário não encontrado");
@@ -76,7 +98,38 @@ public class ApiController {
 			json = JsonTransform.jsonUser(novo);
 		} catch (Exception e) {
 			String errorMsg = String.format("O e-mail [%s], já está cadastrado em nossa base de dados!", usuario.getEmail());
-			logger.error(e.getMessage());
+			logger.error(e.toString());
+			json = JsonTransform.jsonError(res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMsg);
+		}
+		
+		return json;
+		
+	}
+	
+	@RequestMapping(value = "/cadastrarUsuarioByFacebook", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String cadastrarUsuarioByFacebook(@ModelAttribute("Usuario") Usuario u, HttpServletResponse res) throws Exception {
+		String json = "";
+		Usuario usuario = new Usuario();
+		String senha = PassRandom.getRandomPass(6);
+		
+		usuario.setNome(u.getNome());
+		usuario.setEmail(u.getEmail());
+		usuario.setSenha(CriptyEncode.encodeSha256Hex(senha));
+		usuario.setTipo("app");
+		
+		try {
+			Usuario novo = repository.save(usuario);
+			rankRepo.save(PontuaUsuario.pontuar(novo.getId(), 100.0));
+			
+			senderMailService.send(u.getEmail(), "Bem vindo", String.format("Estamos enviando sua senha de acesso %s, "
+					+ "para altera-la acesse as configurações de perfil "
+					+ "do app Torcedor digital ou acesse %s",senha, "torcedordigital.com/admin"));
+			
+			json = JsonTransform.jsonUser(novo);
+		} catch (Exception e) {
+			String errorMsg = String.format("O e-mail %s, já está cadastrado!", usuario.getEmail());
+			logger.error(e.toString());
 			json = JsonTransform.jsonError(res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMsg);
 		}
 		

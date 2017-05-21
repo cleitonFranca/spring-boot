@@ -39,6 +39,21 @@ public class UsuarioDAO {
 			return null;
 		}
 	}
+	
+	public Usuario buscaUsuarioPorEmail(String email) {
+
+		try {
+			return (Usuario) em
+					.createNativeQuery("SELECT * FROM usuarios WHERE email=:email", Usuario.class)
+					.setParameter("email", email)
+					.getSingleResult();
+
+		} catch (Exception ex) {
+			logger.error(ex.getMessage());
+
+			return null;
+		}
+	}
 
 	public Usuario recuperarSenha(Usuario u) {
 		

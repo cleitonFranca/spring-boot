@@ -27,7 +27,6 @@ public class Usuario implements Serializable {
 	private String nome;
 	
 	@Column(name="sobre_nome")
-	@NotNull
 	private String sobreNome;
 	
 	@NotNull

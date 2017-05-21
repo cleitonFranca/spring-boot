@@ -2,6 +2,10 @@ package servidor.torcedor.digital;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import javax.persistence.EntityManager;
 
 import org.apache.velocity.app.Velocity;
@@ -13,9 +17,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import servidor.torcedor.digital.DAO.UsuarioDAO;
+import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
+import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
+import servidor.torcedor.digital.utils.DateNow;
 
 
 /**
@@ -28,6 +35,9 @@ public class AppTest {
 	
 	@Autowired
 	private UsuarioRepository repo;
+	
+	@Autowired
+	private RankRepository rank;
 	
 	@Autowired
 	private EntityManager em;
@@ -70,8 +80,22 @@ public class AppTest {
 		Usuario usuario = dao.buscaUsuarioPorEmailSenha(u);
 		
 		
-		System.out.println(usuario);
+		System.out.println(usuario);	
+	}
+	
+	@Test
+	public void test_rank() {
 		
+		Rank r = new Rank();
+		r.setIdUsuario(4L);
+		r.setPontos(200.82236);
+		r.setAtualizado(DateNow.getDateNow());
+		
+		try {
+			rank.save(r);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

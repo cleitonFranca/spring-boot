@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import servidor.torcedor.digital.models.Usuario;
 
 @Repository
-@Transactional
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	
 }
