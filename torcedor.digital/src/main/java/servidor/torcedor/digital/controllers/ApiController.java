@@ -1,5 +1,7 @@
 package servidor.torcedor.digital.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -13,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 import servidor.torcedor.digital.DAO.UsuarioDAO;
+import servidor.torcedor.digital.DAO.ViewRankDAO;
+import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
+import servidor.torcedor.digital.models.ViewRankGeral;
 import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
@@ -37,6 +43,9 @@ public class ApiController {
 	
 	@Autowired
 	private RankRepository rankRepo;
+	
+	@Autowired
+	private ViewRankDAO rankDao;
 	
 	@Autowired
     SenderMailService senderMailService;
@@ -136,6 +145,29 @@ public class ApiController {
 		
 		return json;
 		
+	}
+	
+	@RequestMapping(value = "/rank", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String rank(HttpServletResponse res) {
+	
+		List<ViewRankGeral> rankGeral = rankDao.getRankGeral();
+		
+
+		if (rankGeral.size() <= 0) {
+			return JsonTransform.jsonError(res, HttpServletResponse.SC_NOT_FOUND, "Não há resgistros!");
+		} 
+
+		return JsonTransform.jsonListRank(rankGeral);
+	}
+	
+	@RequestMapping(value = "/pontuarIngresso", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String pontuarIngresso(@RequestParam(value="id") String id, HttpServletResponse res) {	
+		Long idUser = Long.valueOf(id);
+		rankRepo.save(PontuaUsuario.pontuar(idUser, 300.0));
+
+		return "<center><h1>ingresso Confirmado</h1></center>";
 	}
 
 }

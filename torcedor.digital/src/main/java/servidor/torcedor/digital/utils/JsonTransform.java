@@ -1,10 +1,16 @@
 package servidor.torcedor.digital.utils;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+
+import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
+import servidor.torcedor.digital.models.ViewRankGeral;
 
 public class JsonTransform {
 	
@@ -27,6 +33,16 @@ public class JsonTransform {
 							+ "\"tipo\": \"%s\" }"
 				+ "}", 
 				usuario.getId(), usuario.getNome(), usuario.getEmail(), usuario.getTipo());
+		
+		return json;
+	}
+	
+	public static String jsonListRank(List<ViewRankGeral> listRank) {
+		
+		Gson gson = new Gson();
+		
+		String json = gson.toJson(listRank);
+
 		
 		return json;
 	}
