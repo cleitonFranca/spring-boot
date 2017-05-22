@@ -167,7 +167,7 @@ public class ApiController {
 		Long idUser = Long.valueOf(id);
 		rankRepo.save(PontuaUsuario.pontuar(idUser, 300.0));
 
-		return "ingresso Confirmado";
+		return "{'status': 'Ingresso Confirmado'}";
 	}
 
 }
