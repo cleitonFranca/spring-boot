@@ -34,5 +34,24 @@ public class SenderMailService {
         mailSender.send(email);
     	
     }
+    
+    public boolean sendConfirm(String emailPara, String titulo, String conteudo) {
+    	SimpleMailMessage email = new SimpleMailMessage();
+    	try {
+    		email.setFrom("cleiton2281@gmail.com");
+    		email.setTo(emailPara); 
+    		email.setSubject(titulo);
+    		email.setText(conteudo);
+    		
+    		mailSender.send(email);
+    		
+    		return true;
+
+    	} catch (Exception e) {
+			return false;
+		}
+    	
+    	
+    }
 
 }

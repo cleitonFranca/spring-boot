@@ -3,12 +3,14 @@ package servidor.torcedor.digital.controllers;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,6 +63,51 @@ public class ApiController {
 		return JsonTransform.jsonUser(usuario);
 	}
 	
+	@RequestMapping("/recuperarSenha")
+	@ResponseBody
+	public String recuperarSenha(@ModelAttribute("Usuario") Usuario u, HttpServletResponse res) throws Exception {
+
+		Usuario usuario = usuarioDao.recuperarSenha(u);
+		String senha = PassRandom.getRandomPass(6);
+		
+		if(usuario != null) {
+			usuario.setSenha(CriptyEncode.encodeSha256Hex(senha));
+			Usuario update = repository.save(usuario);
+			
+			senderMailService.send(update.getEmail(), "Nova senha - Torcedor Digital", String.format("Estamos enviando sua senha de acesso [ %s ], "
+					+ "para altera-la acesse as configurações de perfil "
+					+ "do app Torcedor digital ou acesse %s",senha, "torcedordigital.com/admin"));
+			
+			if (update != null) {
+				return String.format("{\"message\": \"Enviado para e-mail: %s\"}", usuario.getEmail());			
+			}
+			
+		} 
+		return JsonTransform.jsonError(res, HttpServletResponse.SC_NOT_FOUND, "E-mail não encontrado");
+
+
+		
+	}
+	
+	@RequestMapping("/convite")
+	@ResponseBody
+	public String convite(@RequestParam(value="convidado") String convidado, @RequestParam(value="emailConvidado") String emailConvidado, @RequestParam(value="usuarioNome") String usuarioNome, HttpServletResponse res) throws Exception {
+
+		if(!Strings.isNullOrEmpty(convidado) && !Strings.isNullOrEmpty(emailConvidado)&& !Strings.isNullOrEmpty(usuarioNome)) {
+			
+			
+			boolean send = senderMailService.sendConfirm(emailConvidado, "Convite",String.format("%s está convidando-o para fazer parte do Torcedor Digital, acesse: %s", usuarioNome, "http://torcedordigital.com/api/cadastrarUsuarioByFacebook?nome=+"+convidado+"&email="+emailConvidado+""));
+			
+			if (send) {
+				return String.format("{\"message\": \"Convite enviado para e-mail: %s\"}", emailConvidado);			
+			}
+			
+		} 
+		return JsonTransform.jsonError(res, HttpServletResponse.SC_NOT_FOUND, "E-mail não encontrado");
+
+
+		
+	}
 	@RequestMapping(value = "/existe", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public String apiExiste(@RequestParam(value="email") String email, HttpServletResponse res) {
