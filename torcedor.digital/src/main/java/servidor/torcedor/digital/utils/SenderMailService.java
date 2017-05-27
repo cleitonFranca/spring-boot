@@ -13,12 +13,10 @@ public class SenderMailService {
 	
 	
     public void enviar() {
-        
     	SimpleMailMessage email = new SimpleMailMessage();
-        email.setFrom("cleiton2281@gmail.com");
-        email.setTo("cleiton2281@gmail.com");
-        //email.setTo("rochelle.sara@hotmail.com");
-        //email.setBcc("cleiton2281@gmail.com");
+        
+    	email.setFrom("cleiton2281@gmail.com");
+        email.setTo("torcedordigitaladm@gmail.com");
         email.setSubject("Teste envio de e-mail");
         email.setText("Enviei este e-mail usando o servidor, Torcedor Digital.");
         
@@ -26,11 +24,10 @@ public class SenderMailService {
     }
     
     public void send(String emailPara, String titulo, String conteudo) {
-    	
     	SimpleMailMessage email = new SimpleMailMessage();
+    	
     	email.setFrom("cleiton2281@gmail.com");
-        email.setTo("cleiton2281@gmail.com"); // por enquanto que não está liberado no AWS-SES
-        //email.setBcc("cleiton2281@gmail.com");
+        email.setTo(emailPara); 
         email.setSubject(titulo);
         email.setText(conteudo);
      

@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.DAO.ViewRankDAO;
-import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.models.ViewRankGeral;
 import servidor.torcedor.digital.repositories.RankRepository;
