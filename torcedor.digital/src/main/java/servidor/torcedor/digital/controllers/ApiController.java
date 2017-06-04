@@ -268,5 +268,14 @@ public class ApiController {
 		
 		return gson.toJson(jogos);
 	}
+	
+	@RequestMapping(value = "/now", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String now(HttpServletResponse res) throws IOException {
+	
+		Timestamp now = Timestamp.valueOf(DateNow.getDateNow());
+
+		return now.toString();
+	}
 
 }
