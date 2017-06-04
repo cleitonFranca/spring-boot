@@ -36,7 +36,7 @@ public class DateNow {
 		
 		// já que roda no aws esse ajuste para garantir a hora de Brasilia
 		// se for rodado em ambiente local(Brasil) a data ficarar errada ****
-		DateUtils.addHours(date, -3);
+		//DateUtils.addHours(date, -3);
 		
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("pt", "br"));
 		String strData = sd.format(date);
