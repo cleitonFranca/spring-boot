@@ -20,6 +20,8 @@ public class DateNow {
 	
 	/**
 	 * Método tem como objetivo retorna a data atual
+	 * só usado para setar campos pelo servidor campos setados 
+	 * pelos usuario não poderam usar esse método!!!!
 	 * Com TimeZone configurado para America/Sao_Paulo 
 	 * @return
 	 * @throws IOException 
@@ -36,10 +38,10 @@ public class DateNow {
 		
 		// já que roda no aws esse ajuste para garantir a hora de Brasilia
 		// se for rodado em ambiente local(Brasil) a data ficarar errada ****
-		//DateUtils.addHours(date, -3);
+		Date dataAjustada = DateUtils.addHours(date, -3);
 		
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("pt", "br"));
-		String strData = sd.format(date);
+		String strData = sd.format(dataAjustada);
 		
 			
 		return strData;	
