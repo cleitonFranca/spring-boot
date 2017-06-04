@@ -1,8 +1,13 @@
 package servidor.torcedor.digital.utils;
 
-import java.util.Calendar;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
+import java.util.Locale;
+
+import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
 
 /**
  * Classe retorna a data atual com TimeZone = America/Sao_Paulo
@@ -16,10 +21,23 @@ public class DateNow {
 	 * Método tem como objetivo retorna a data atual
 	 * Com TimeZone configurado para America/Sao_Paulo 
 	 * @return
+	 * @throws IOException 
 	 */
-	public static Date getDateNow() {
-		Calendar saoPauloDate = Calendar.getInstance(TimeZone.getTimeZone("America/Sao_Paulo"));
-		return saoPauloDate.getTime();
+	public static String getDateNow() throws IOException {
+		
+		NTPUDPClient client = new NTPUDPClient();
+		client.open();
+		InetAddress hostAddr = InetAddress.getByName("a.st1.ntp.br");
+		TimeInfo info = client.getTime(hostAddr);
+		info.computeDetails(); // compute offset/delay if not already done
+		
+		Date date = new Date(info.getReturnTime());
+		
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("pt", "br"));
+		String strData = sd.format(date);
+		
+			
+		return strData;	
 	}
 
 }

@@ -1,9 +1,11 @@
 package servidor.torcedor.digital.controllers;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,16 +23,21 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.base.Strings;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.DAO.ViewRankDAO;
 import servidor.torcedor.digital.files.StorageFileNotFoundException;
 import servidor.torcedor.digital.files.StorageService;
+import servidor.torcedor.digital.models.Calendario;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.models.ViewRankGeral;
+import servidor.torcedor.digital.repositories.CalendarioRepository;
 import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
+import servidor.torcedor.digital.utils.DateNow;
 import servidor.torcedor.digital.utils.JsonTransform;
 import servidor.torcedor.digital.utils.PassRandom;
 import servidor.torcedor.digital.utils.PontuaUsuario;
@@ -44,6 +50,9 @@ public class ApiController {
 	
 	@Autowired
 	private UsuarioRepository repository;
+	
+	@Autowired
+	private CalendarioRepository calendarioRepo;
 
 	@Autowired
 	private UsuarioDAO usuarioDao;
@@ -105,6 +114,7 @@ public class ApiController {
 		
 		if(usuario != null) {
 			usuario.setSenha(CriptyEncode.encodeSha256Hex(senha));
+			usuario.setAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 			Usuario update = repository.save(usuario);
 			
 			senderMailService.send(update.getEmail(), "Nova senha - Torcedor Digital", String.format("Estamos enviando sua senha de acesso [ %s ], "
@@ -204,6 +214,7 @@ public class ApiController {
 		usuario.setNome(u.getNome());
 		usuario.setEmail(u.getEmail());
 		usuario.setSenha(CriptyEncode.encodeSha256Hex(senha));
+		usuario.setCriacao(Timestamp.valueOf(DateNow.getDateNow()));
 		usuario.setTipo("app");
 		
 		try {
@@ -241,11 +252,21 @@ public class ApiController {
 	
 	@RequestMapping(value = "/pontuarIngresso", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public String pontuarIngresso(@RequestParam(value="id") String id, HttpServletResponse res) {	
+	public String pontuarIngresso(@RequestParam(value="id") String id, HttpServletResponse res) throws IOException {	
 		Long idUser = Long.valueOf(id);
 		rankRepo.save(PontuaUsuario.pontuar(idUser, 300.0));
 
 		return "{'status': 'Ingresso Confirmado'}";
+	}
+	
+	@RequestMapping(value = "/calendario", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String calendario(HttpServletResponse res) {	
+		
+		List<Calendario> jogos = calendarioRepo.findAll();
+		Gson gson = new GsonBuilder().setDateFormat("dd/MM/YYYY HH:mm").create();
+		
+		return gson.toJson(jogos);
 	}
 
 }

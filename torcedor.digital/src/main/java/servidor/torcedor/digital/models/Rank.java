@@ -1,7 +1,7 @@
 package servidor.torcedor.digital.models;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,7 +31,7 @@ public class Rank implements Serializable {
 	private Double pontos;
 	
 	@NotNull
-	private Date atualizado;
+	private Timestamp atualizado;
 
 	
 	public Long getId() {
@@ -58,11 +58,13 @@ public class Rank implements Serializable {
 		this.pontos = pontos;
 	}
 
-	public Date getAtualizado() {
+	
+
+	public Timestamp getAtualizado() {
 		return atualizado;
 	}
 
-	public void setAtualizado(Date atualizado) {
+	public void setAtualizado(Timestamp atualizado) {
 		this.atualizado = atualizado;
 	}
 

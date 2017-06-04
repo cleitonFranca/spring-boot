@@ -2,23 +2,19 @@ package servidor.torcedor.digital;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.TimeZone;
 
 import javax.persistence.EntityManager;
 
-import org.apache.velocity.app.Velocity;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import servidor.torcedor.digital.DAO.UsuarioDAO;
@@ -90,12 +86,13 @@ public class AppTest {
 	}
 	
 	@Test
-	public void test_rank() {
+	public void test_rank() throws IOException {
 		
 		Rank r = new Rank();
-		r.setIdUsuario(4L);
-		r.setPontos(200.82236);
-		r.setAtualizado(DateNow.getDateNow());
+		r.setIdUsuario(1L);
+		r.setPontos(200.2);
+		//Timestamp.valueOf(DateNow.getDateNow().toString());
+		r.setAtualizado(Timestamp.valueOf(DateNow.getDateNow()));
 		
 		try {
 			rank.save(r);

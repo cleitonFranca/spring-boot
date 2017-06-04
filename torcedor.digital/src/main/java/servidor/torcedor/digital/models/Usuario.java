@@ -1,6 +1,7 @@
 package servidor.torcedor.digital.models;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -46,6 +47,27 @@ public class Usuario implements Serializable {
 	
 	private String tipo;
 	
+	private Timestamp criacao;
+	
+	private Timestamp atualizacao;
+	
+	
+	public Timestamp getCriacao() {
+		return criacao;
+	}
+
+	public void setCriacao(Timestamp criacao) {
+		this.criacao = criacao;
+	}
+
+	public Timestamp getAtualizacao() {
+		return atualizacao;
+	}
+
+	public void setAtualizacao(Timestamp atualizacao) {
+		this.atualizacao = atualizacao;
+	}
+
 	public Long getId() {
 		return id;
 	}
