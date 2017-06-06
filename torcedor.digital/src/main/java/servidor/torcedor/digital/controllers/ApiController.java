@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -267,6 +269,25 @@ public class ApiController {
 		Gson gson = new GsonBuilder().setDateFormat("dd/MM/YYYY HH:mm").create();
 		
 		return gson.toJson(jogos);
+	}
+	
+	
+	
+	@RequestMapping(value ="/checkout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String checkout(@RequestParam Map<String,String> allRequestParams) {
+		Gson json = new Gson();
+		
+		for (Entry<String, String> i : allRequestParams.entrySet()) {
+			
+			System.out.println(i.getKey() + ":" +i.getValue());
+			
+		}
+		
+		
+		
+		
+	   return json.toJson(allRequestParams);
 	}
 	
 	@RequestMapping(value = "/now", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
