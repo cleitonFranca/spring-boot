@@ -264,6 +264,25 @@ public class ApiController {
 
 		return JsonTransform.jsonListRank(rankGeral);
 	}
+	
+	@RequestMapping(value = "/pontuarPorConvite", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String pontuarPorConvite(@RequestParam("email") String email, HttpServletResponse res)
+			throws Exception {
+		String json = "";
+		Usuario usuario = usuarioDao.buscaUsuarioPorEmail(email);
+		try {
+			rankRepo.save(PontuaUsuario.pontuar(usuario.getId(), 100.0));
+			json = JsonTransform.jsonSuccess(res, HttpServletResponse.SC_ACCEPTED, "Pontuado com sucesso!");
+		} catch (Exception e) {
+			String errorMsg = String.format("Falha na pontuação para o usuario!", usuario.getNome());
+			logger.error(e.toString());
+			json = JsonTransform.jsonError(res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMsg);
+		}
+
+		return json;
+
+	}
 
 	@RequestMapping(value = "/pontuarIngresso", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody

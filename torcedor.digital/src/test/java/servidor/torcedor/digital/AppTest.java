@@ -114,6 +114,17 @@ public class AppTest {
 
 		System.out.println(usuario);
 	}
+	
+	@Test
+	public void test_atualizando_usuario() {
+
+		Usuario u = new Usuario();
+		u.setEmail("cleiton@teste.com");
+
+		Usuario usuario = dao.buscaUsuarioPorEmailSenha(u);
+
+		System.out.println(usuario);
+	}
 
 	@Test
 	public void test_rank() throws IOException {

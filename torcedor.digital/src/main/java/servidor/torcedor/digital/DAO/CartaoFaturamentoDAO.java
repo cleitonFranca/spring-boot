@@ -88,6 +88,11 @@ public class CartaoFaturamentoDAO {
 	
 	public CartaoFaturamento salvarOuAtualizarCartaoFaturamento(Map<String, String> enderecoInfo) throws ParseException {
 		
+		
+		
+		
+		System.out.println(enderecoInfo);
+		
 		String email = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("email")).findAny().get().getValue();
 		String numeroCartao = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("numero_cartao")).findAny().get().getValue();
 		String bandeira = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("bandeira")).findAny().get().getValue();
