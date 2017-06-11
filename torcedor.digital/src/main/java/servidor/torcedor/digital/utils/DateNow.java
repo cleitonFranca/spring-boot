@@ -1,8 +1,12 @@
 package servidor.torcedor.digital.utils;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apache.commons.lang.time.DateUtils;
@@ -23,7 +27,7 @@ public class DateNow {
 	 * @return
 	 * @throws IOException 
 	 */
-	public static String getDateNow() throws IOException {
+	public static String getDateNow() {
 		
 	/*	NTPUDPClient client = new NTPUDPClient();
 		client.open();
@@ -42,6 +46,16 @@ public class DateNow {
 		
 			
 		return strData;	
+	}
+	
+	public static Timestamp formatDate(String data) throws ParseException {
+		
+		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", new Locale("pt", "br"));
+		Date d = new Date(sd.parse(data).getTime());
+		String strData = sd.format(d);
+		
+		return Timestamp.valueOf(strData);
+		
 	}
 
 }

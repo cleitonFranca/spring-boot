@@ -16,7 +16,7 @@ public class SenderMailService {
     	SimpleMailMessage email = new SimpleMailMessage();
         
     	email.setFrom("cleiton2281@gmail.com");
-        email.setTo("torcedordigitaladm@gmail.com");
+        email.setTo("profissional.cleiton@gmail.com");
         email.setSubject("Teste envio de e-mail");
         email.setText("Enviei este e-mail usando o servidor, Torcedor Digital.");
         
