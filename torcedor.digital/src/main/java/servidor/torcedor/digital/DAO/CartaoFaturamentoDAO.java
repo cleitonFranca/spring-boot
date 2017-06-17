@@ -88,11 +88,7 @@ public class CartaoFaturamentoDAO {
 	
 	public CartaoFaturamento salvarOuAtualizarCartaoFaturamento(Map<String, String> enderecoInfo) throws ParseException {
 		
-		
-		
-		
-		System.out.println(enderecoInfo);
-		
+		String idJogo = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("id_jogo")).findAny().get().getValue();
 		String email = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("email")).findAny().get().getValue();
 		String numeroCartao = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("numero_cartao")).findAny().get().getValue();
 		String bandeira = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("bandeira")).findAny().get().getValue();
@@ -102,24 +98,24 @@ public class CartaoFaturamentoDAO {
 		
 		Usuario usuario = usuarioDAO.buscaUsuarioPorEmail(email);
 		
-		CartaoFaturamento novo = novaFatura(numeroCartao, bandeira, validade, codigo, quantidade, usuario);
+		CartaoFaturamento novo = novaFatura(numeroCartao, bandeira, validade, codigo, quantidade, idJogo,usuario);
 		
 		senderMailService.send(email, "Obrigado por Compra seu ingresso pelo Torcedor Digital","Assim que confirmamos o pagamento estaremos enviado o seu ingresso.");
 		
 		return repo.save(novo);
 		
 		
-		
 	}
 
 	private CartaoFaturamento novaFatura(String numeroCartao, String bandeira, String validade, String codigo,
-			String quantidade, Usuario usuario) throws ParseException {
+			String quantidade, String idJogo,Usuario usuario) throws ParseException {
 		
 		CartaoFaturamento cartaFatura = new CartaoFaturamento();
 		cartaFatura.setIdUsuario(usuario.getId());
+		cartaFatura.setIdJogo(Long.valueOf(idJogo));
 		cartaFatura.setNumero(numeroCartao);
 		cartaFatura.setBandeira(bandeira);
-		cartaFatura.setDataExp(DateNow.formatDate(validade));
+		cartaFatura.setDataExp(DateNow.formatDateSemTime(validade));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
 		cartaFatura.setCodigoCCV(codigo);
 		cartaFatura.setQuantidade(Integer.valueOf(quantidade));

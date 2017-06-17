@@ -2,8 +2,10 @@ package servidor.torcedor.digital.utils;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -55,6 +57,20 @@ public class DateNow {
 		String strData = sd.format(d);
 		
 		return Timestamp.valueOf(strData);
+		
+	}
+	
+	
+	public static Timestamp formatDateSemTime(String data) throws ParseException {
+		Instant t = null;
+		
+		try {						
+			Date dataFormatada = DateFormat.getInstance().parse(data);
+			t = dataFormatada.toInstant();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Timestamp.from(t);
 		
 	}
 
