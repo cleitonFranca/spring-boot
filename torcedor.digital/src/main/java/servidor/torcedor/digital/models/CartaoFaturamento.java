@@ -25,6 +25,11 @@ public class CartaoFaturamento implements Serializable {
 	@Column(name="id_usuario")
 	private Long idUsuario;
 	
+	@NotNull
+	@Column(name="id_jogo")
+	private Long idJogo;
+	
+	
 	private String bandeira;
 	
 	private String numero;
@@ -132,13 +137,24 @@ public class CartaoFaturamento implements Serializable {
 		this.valorTotal = valorTotal;
 	}
 
+	
+	public Long getIdJogo() {
+		return idJogo;
+	}
+
+	public void setIdJogo(Long idJogo) {
+		this.idJogo = idJogo;
+	}
+
 	@Override
 	public String toString() {
-		return "CartaoFaturamento [id=" + id + ", idUsuario=" + idUsuario + ", bandeira=" + bandeira + ", numero="
-				+ numero + ", CodigoCCV=" + CodigoCCV + ", dataExp=" + dataExp + ", dataCriacao=" + dataCriacao
-				+ ", quantidade=" + quantidade + ", valorTotal=" + valorTotal + ", ultimaAtualizacao="
-				+ ultimaAtualizacao + ", status=" + status + "]";
+		return "CartaoFaturamento [id=" + id + ", idUsuario=" + idUsuario + ", idJogo=" + idJogo + ", bandeira="
+				+ bandeira + ", numero=" + numero + ", CodigoCCV=" + CodigoCCV + ", dataExp=" + dataExp
+				+ ", dataCriacao=" + dataCriacao + ", quantidade=" + quantidade + ", valorTotal=" + valorTotal
+				+ ", ultimaAtualizacao=" + ultimaAtualizacao + ", status=" + status + "]";
 	}
+
+	
 
 	
 	

@@ -2,14 +2,17 @@ package servidor.torcedor.digital.utils;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.format.datetime.DateFormatter;
 
 /**
  * Classe retorna a data atual com TimeZone = America/Sao_Paulo
@@ -55,6 +58,19 @@ public class DateNow {
 		String strData = sd.format(d);
 		
 		return Timestamp.valueOf(strData);
+		
+	}
+	
+	
+	public static Timestamp formatDateSemTime(String data) throws ParseException {
+		Instant t = null;
+		try {						
+			Date dataFormatada = new Date(data);
+			t = dataFormatada.toInstant();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Timestamp.from(t);
 		
 	}
 

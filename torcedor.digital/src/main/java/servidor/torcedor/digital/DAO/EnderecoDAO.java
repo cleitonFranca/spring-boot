@@ -66,7 +66,7 @@ public class EnderecoDAO {
 		String bairro = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("bairro")).findAny().get().getValue();
 		String logradouro = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("logradouro")).findAny().get().getValue();
 		String numero = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("numero")).findAny().get().getValue();
-		String complemento = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("complemento")).findAny().get().getValue();
+		String complemento = (enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("complemento")).findAny().get().getValue() != null) ? enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("complemento")).findAny().get().getValue(): null;
 		
 		Usuario usuario = usuarioDAO.buscaUsuarioPorEmail(email);
 		// atualiza o telefone;
