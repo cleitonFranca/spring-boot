@@ -52,7 +52,7 @@ import servidor.torcedor.digital.utils.PassRandom;
 import servidor.torcedor.digital.utils.PontuaUsuario;
 import servidor.torcedor.digital.utils.SenderMailService;
 
-@Controller()
+@Controller
 @RequestMapping("/api")
 public class ApiController {
 	private static final Logger logger = LoggerFactory.getLogger(ApiController.class);

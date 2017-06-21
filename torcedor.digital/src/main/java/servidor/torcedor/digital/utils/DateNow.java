@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.springframework.format.datetime.DateFormatter;
 
 /**
  * Classe retorna a data atual com TimeZone = America/Sao_Paulo
@@ -63,9 +64,8 @@ public class DateNow {
 	
 	public static Timestamp formatDateSemTime(String data) throws ParseException {
 		Instant t = null;
-		
 		try {						
-			Date dataFormatada = DateFormat.getInstance().parse(data);
+			Date dataFormatada = new Date(data);
 			t = dataFormatada.toInstant();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.buf.UEncoder.SafeCharsSet;
+
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
@@ -78,13 +80,7 @@ public class JsonTransform {
 	 * @return
 	 */
 	public static String jsonSuccess(HttpServletResponse res, int resposta, String msg) {
-		try {
-			// altera resposta do cabeçalho
-			res.sendError(resposta, msg);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		res.setStatus(200);
 		return String.format("{\"success\" : \"%s\", \"successMsg\" : \"%s\"}", resposta, msg);
 	}
 	
