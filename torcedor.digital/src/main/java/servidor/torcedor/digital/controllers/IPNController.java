@@ -20,7 +20,7 @@ public class IPNController {
 	@ResponseBody
 	public String apiLogin(@RequestBody String data) {
 		Gson json = new Gson();
-		logger.info(data);
+		logger.info(json.toJson(data));
 		
 		return json.toJson(data);
 		
