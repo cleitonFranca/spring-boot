@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 @Controller
 @RequestMapping("/api/ipn")
 public class IPNController {
@@ -17,9 +19,10 @@ public class IPNController {
 	@RequestMapping(value = "/notification", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
 	public String apiLogin(@RequestBody String data) {
-		
+		Gson json = new Gson();
 		logger.info(data);
-		return data;
+		
+		return json.toJson(data);
 		
 	}
 
