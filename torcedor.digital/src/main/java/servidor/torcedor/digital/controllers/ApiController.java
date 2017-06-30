@@ -1,12 +1,11 @@
 package servidor.torcedor.digital.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,35 +13,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.common.base.Strings;
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
 import servidor.torcedor.digital.DAO.CartaoFaturamentoDAO;
 import servidor.torcedor.digital.DAO.EnderecoDAO;
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.DAO.ViewRankDAO;
-import servidor.torcedor.digital.files.StorageFileNotFoundException;
-import servidor.torcedor.digital.files.StorageService;
 import servidor.torcedor.digital.models.Calendario;
 import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.DTOImage;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.models.ViewRankGeral;
 import servidor.torcedor.digital.repositories.CalendarioRepository;
-import servidor.torcedor.digital.repositories.EnderecoRepository;
 import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
@@ -56,7 +49,9 @@ import servidor.torcedor.digital.utils.SenderMailService;
 @RequestMapping("/api")
 public class ApiController {
 	private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
-
+	
+	private static final String location = "/home/ubuntu/app-static/img/";
+	
 	@Autowired
 	private UsuarioRepository repository;
 	
@@ -71,6 +66,9 @@ public class ApiController {
 
 	@Autowired
 	private UsuarioDAO usuarioDao;
+	
+	@Autowired
+	private DTOImage image;
 
 	@Autowired
 	private RankRepository rankRepo;
@@ -81,28 +79,22 @@ public class ApiController {
 	@Autowired
 	private SenderMailService senderMailService;
 
-	private final StorageService storageService;
+	
 
-	@Autowired
-	public ApiController(StorageService storege) {
-
-		this.storageService = storege;
-	}
-
-	@PostMapping("/upload")
-	public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-
-		storageService.store(file);
-		redirectAttributes.addFlashAttribute("message",
-				"You successfully uploaded " + file.getOriginalFilename() + "!");
-
-		return "redirect:/";
-	}
-
-	@SuppressWarnings("rawtypes")
-	@ExceptionHandler(StorageFileNotFoundException.class)
-	public ResponseEntity handleStorageFileNotFound(StorageFileNotFoundException exc) {
-		return ResponseEntity.notFound().build();
+	@RequestMapping(value="/upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+		
+		byte[] arquivo = file.getBytes();
+		String nomeArquivo = PassRandom.getRandomPass(10)+"_"+file.getOriginalFilename();
+		Files.write(arquivo, new File("/home/cleiton/img/"+nomeArquivo));
+		
+		image.message = "success";
+		image.location = "http://torcedordigital.com:8081/img/"+nomeArquivo;
+		
+		Gson gson = new Gson();
+		
+		return gson.toJson(image);
 	}
 
 	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -338,3 +330,4 @@ public class ApiController {
 	}
 
 }
+
