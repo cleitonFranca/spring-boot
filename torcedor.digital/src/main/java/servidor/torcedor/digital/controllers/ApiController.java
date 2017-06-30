@@ -87,7 +87,7 @@ public class ApiController {
 		
 		byte[] arquivo = file.getBytes();
 		String nomeArquivo = PassRandom.getRandomPass(10)+"_"+file.getOriginalFilename();
-		Files.write(arquivo, new File("/home/cleiton/img/"+nomeArquivo));
+		Files.write(arquivo, new File(location+nomeArquivo));
 		
 		image.message = "success";
 		image.location = "http://torcedordigital.com:8081/img/"+nomeArquivo;
