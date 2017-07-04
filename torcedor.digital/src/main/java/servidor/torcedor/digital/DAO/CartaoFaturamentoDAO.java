@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import servidor.torcedor.digital.models.Endereco;
+import servidor.torcedor.digital.models.ResponseNotification;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.repositories.CartaoFaturamentoRepository;
 import servidor.torcedor.digital.utils.DateNow;
@@ -126,6 +127,34 @@ public class CartaoFaturamentoDAO {
 
 	private Double calculaValorFatura(String quantidade) {
 		return Integer.valueOf(quantidade) * valorUnitario;
+	}
+
+	public CartaoFaturamento salvarOuAtualizarCartaoFaturamento(ResponseNotification response) {
+		String idJogo = response.getCustom();
+		String email = response.getPayer_email();
+		String quantidade = response.getQuantity();
+		// ver validação para geração do ticket
+		String status = response.getPayment_status();
+		
+		
+		Usuario usuario = usuarioDAO.buscaUsuarioPorEmail(email);
+		
+		CartaoFaturamento novo = novaFatura(quantidade, idJogo,status, usuario);
+		
+		senderMailService.send(email, "Obrigado por Compra seu ingresso pelo Torcedor Digital","Assim que confirmamos o pagamento estaremos enviado o seu ingresso.");
+		
+		return repo.save(novo);
+	}
+
+	private CartaoFaturamento novaFatura(String quantidade, String idJogo, String status, Usuario usuario) {
+		CartaoFaturamento cartaFatura = new CartaoFaturamento();
+		cartaFatura.setIdUsuario(usuario.getId());
+		cartaFatura.setIdJogo(Long.valueOf(idJogo));
+		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
+		cartaFatura.setQuantidade(Integer.valueOf(quantidade));
+		cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(quantidade)));
+		
+		return cartaFatura;
 	}
 
 
