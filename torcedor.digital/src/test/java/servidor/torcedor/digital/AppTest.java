@@ -220,6 +220,15 @@ public class AppTest {
 		System.out.println(teste);
 
 	}
+	
+	@Test
+	public void test_buscaFaturaByIdTransacao() {
+		String idTransacao = "123050770";
+		Faturamento teste = cartaFatura.buscaFatura(idTransacao);
+
+		System.out.println(teste);
+
+	}
 
 	@Test
 	public void test_jdbcSingleConection() {

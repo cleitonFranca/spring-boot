@@ -78,14 +78,13 @@ public class FaturamentoDAO {
 	 * @param idUsuario
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public Faturamento buscaFatura(String idFatura) {
+	public Faturamento buscaFatura(String transacao) {
 		
 		try {
-			String sql = "SELECT * FROM faturamento WHERE id_usuario=:idFatura";
+			String sql = "SELECT * FROM faturamento WHERE id_transacao=:transacao limit 1";
 			return 	(Faturamento) em
 					.createNativeQuery(sql, Faturamento.class)
-					.setParameter("idFatura", idFatura).getSingleResult();
+					.setParameter("transacao", transacao).getSingleResult();
 					
 			
 		} catch (Exception e) {
