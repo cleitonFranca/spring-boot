@@ -187,9 +187,10 @@ public class FaturamentoDAO {
 		cartaFatura.setIdTransacao(Long.valueOf(response.getTxn_id()));
 		cartaFatura.setIdJogo(Long.valueOf(response.getCustom()));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
+		cartaFatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 		cartaFatura.setQuantidade(Integer.valueOf(response.getQuantity()));
 		cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(response.getQuantity())));
-		
+		cartaFatura.setStatus(response.getPayment_status());
 		return cartaFatura;
 	}
 
