@@ -30,7 +30,7 @@ public class Faturamento implements Serializable {
 	private Long idJogo;
 
 	@Column(name = "id_transacao")
-	private Long idTransacao;
+	private String idTransacao;
 
 	@Column(name = "data_criacao")
 	private Timestamp dataCriacao;
@@ -108,11 +108,13 @@ public class Faturamento implements Serializable {
 		this.idJogo = idJogo;
 	}
 
-	public Long getIdTransacao() {
+	
+
+	public String getIdTransacao() {
 		return idTransacao;
 	}
 
-	public void setIdTransacao(Long idTransacao) {
+	public void setIdTransacao(String idTransacao) {
 		this.idTransacao = idTransacao;
 	}
 

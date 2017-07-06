@@ -30,7 +30,7 @@ public class IPNController {
 	
 	@RequestMapping(value = "/notification", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public String apiLogin(@ModelAttribute("ResponseNotification") ResponseNotification response) {
+	public String apiLogin(@ModelAttribute("ResponseNotification") ResponseNotification response) throws Exception {
 		Gson json = new Gson();
 		logger.info(json.toJson(response));
 		
@@ -41,7 +41,7 @@ public class IPNController {
 		
 	}
 
-	private Faturamento novoFaturamento(ResponseNotification response) {
+	private Faturamento novoFaturamento(ResponseNotification response) throws Exception {
 		Faturamento cartaFatura =  cartaFaturaDAO.salvarOuAtualizarFaturamento(response);
 		return cartaFatura;
 		

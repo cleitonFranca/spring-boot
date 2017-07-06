@@ -20,6 +20,8 @@ import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.ResponseNotification;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.repositories.FaturamentoRepository;
+import servidor.torcedor.digital.repositories.UsuarioRepository;
+import servidor.torcedor.digital.utils.CriptyEncode;
 import servidor.torcedor.digital.utils.DateNow;
 import servidor.torcedor.digital.utils.SenderMailService;
 import servidor.torcedor.digital.models.Faturamento;
@@ -37,6 +39,9 @@ public class FaturamentoDAO {
 	
 	@Autowired
 	private UsuarioDAO usuarioDAO;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepo;
 	
 	@Autowired
 	private SenderMailService senderMailService;
@@ -147,9 +152,25 @@ public class FaturamentoDAO {
 		return Integer.valueOf(quantidade) * valorUnitario;
 	}
 
-	public Faturamento salvarOuAtualizarFaturamento(ResponseNotification response) {
+	public Faturamento salvarOuAtualizarFaturamento(ResponseNotification response) throws Exception {
 		
 		String email = response.getPayer_email();
+		Usuario usuario = null;
+		usuario = usuarioDAO.buscaUsuarioPorEmail(email);
+		// criação de usuario à partir da compra do ingresso.
+		// não deverar ser usado, porem para casos futuros!!!!
+		if(usuario==null) {
+			usuario = new Usuario();
+			usuario.setNome(response.getFirst_name());
+			usuario.setSobreNome(response.getLast_name());
+			usuario.setEmail(response.getPayer_email());
+			String senha = "senhaGenerica12345";
+			usuario.setSenha(CriptyEncode.encodeSha256Hex(senha));
+			usuario.setTipo("app");
+			usuario.setCriacao(Timestamp.valueOf(DateNow.getDateNow()));
+			usuario.setAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
+			usuarioRepo.save(usuario);
+		}
 		Faturamento fatura = buscaFatura(response.getTxn_id());
 		
 		if(fatura!=null) {
@@ -158,9 +179,6 @@ public class FaturamentoDAO {
 			criarTicket(response.getPayment_status());
 			return repo.save(fatura);
 		}
-		
-		
-		Usuario usuario = usuarioDAO.buscaUsuarioPorEmail(email);
 		
 		Faturamento novo = novaFatura(response, usuario);
 		
@@ -179,12 +197,13 @@ public class FaturamentoDAO {
 	 */
 	private void criarTicket(String status) {
 		System.out.println("ESTATUS DA FATURA:::::"+status);
+		
 	}
 
 	private Faturamento novaFatura(ResponseNotification response, Usuario usuario) {
 		Faturamento cartaFatura = new Faturamento();
 		cartaFatura.setIdUsuario(usuario.getId());
-		cartaFatura.setIdTransacao(Long.valueOf(response.getTxn_id()));
+		cartaFatura.setIdTransacao(response.getTxn_id());
 		cartaFatura.setIdJogo(Long.valueOf(response.getCustom()));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
 		cartaFatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
