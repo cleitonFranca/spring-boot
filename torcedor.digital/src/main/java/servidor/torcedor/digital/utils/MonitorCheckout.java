@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import servidor.torcedor.digital.jdbc.FaturaJDBC;
-import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.Faturamento;
 import servidor.torcedor.digital.models.Ingresso;
 
 
@@ -26,7 +26,7 @@ public class MonitorCheckout {
 			public void run() {
 				try {
 					FaturaJDBC jdbc = new FaturaJDBC();
-					List<CartaoFaturamento> lista = jdbc.listFaturamento();
+					List<Faturamento> lista = jdbc.listFaturamento();
 					criarIngresso(lista);
 					System.out.print("quatidade :"+lista.size()+", ");
 					System.out.println(lista);
@@ -38,7 +38,7 @@ public class MonitorCheckout {
 				}
 			}
 
-			private void criarIngresso(List<CartaoFaturamento> lista) {
+			private void criarIngresso(List<Faturamento> lista) {
 //				for (CartaoFaturamento cartaoFaturamento : lista) {
 //					Ingresso ingresso = new Ingresso();
 //					ingresso.setIdUsuario(cartaoFaturamento.getIdUsuario());
@@ -46,7 +46,7 @@ public class MonitorCheckout {
 //				}
 				
 			}
-		}, 3, 20, TimeUnit.SECONDS);
+		}, 0, 50, TimeUnit.DAYS);
 
 	}
 

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
-import servidor.torcedor.digital.DAO.CartaoFaturamentoDAO;
+import servidor.torcedor.digital.DAO.FaturamentoDAO;
 import servidor.torcedor.digital.DAO.EnderecoDAO;
-import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.Faturamento;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.ResponseNotification;
 
@@ -24,7 +24,7 @@ public class IPNController {
 	private EnderecoDAO enderecoDAO;
 	
 	@Autowired
-	private CartaoFaturamentoDAO cartaFaturaDAO;
+	private FaturamentoDAO cartaFaturaDAO;
 	
 	private static final Logger logger = LoggerFactory.getLogger(IPNController.class);
 	
@@ -41,8 +41,8 @@ public class IPNController {
 		
 	}
 
-	private CartaoFaturamento novoFaturamento(ResponseNotification response) {
-		CartaoFaturamento cartaFatura =  cartaFaturaDAO.salvarOuAtualizarCartaoFaturamento(response);
+	private Faturamento novoFaturamento(ResponseNotification response) {
+		Faturamento cartaFatura =  cartaFaturaDAO.salvarOuAtualizarFaturamento(response);
 		return cartaFatura;
 		
 	}

@@ -25,12 +25,12 @@ import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import servidor.torcedor.digital.DAO.CartaoFaturamentoDAO;
+import servidor.torcedor.digital.DAO.FaturamentoDAO;
 import servidor.torcedor.digital.DAO.EnderecoDAO;
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.DAO.ViewRankDAO;
 import servidor.torcedor.digital.models.Calendario;
-import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.Faturamento;
 import servidor.torcedor.digital.models.DTOImage;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Usuario;
@@ -59,7 +59,7 @@ public class ApiController {
 	private EnderecoDAO enderecoDAO;
 	
 	@Autowired
-	private CartaoFaturamentoDAO cartaFaturaDAO;
+	private FaturamentoDAO cartaFaturaDAO;
 
 	@Autowired
 	private CalendarioRepository calendarioRepo;
@@ -310,8 +310,8 @@ public class ApiController {
 		return JsonTransform.jsonSuccess(res, HttpServletResponse.SC_CREATED, "Fatura criada com sucesso");
 	}
 
-	private CartaoFaturamento novoFaturamento(Map<String, String> allRequestParams) throws ParseException {
-		CartaoFaturamento cartaFatura =  cartaFaturaDAO.salvarOuAtualizarCartaoFaturamento(allRequestParams);
+	private Faturamento novoFaturamento(Map<String, String> allRequestParams) throws ParseException {
+		Faturamento cartaFatura =  cartaFaturaDAO.salvarOuAtualizarCartaoFaturamento(allRequestParams);
 		return cartaFatura;
 	}
 

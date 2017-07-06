@@ -19,21 +19,21 @@ import org.springframework.stereotype.Component;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.ResponseNotification;
 import servidor.torcedor.digital.models.Usuario;
-import servidor.torcedor.digital.repositories.CartaoFaturamentoRepository;
+import servidor.torcedor.digital.repositories.FaturamentoRepository;
 import servidor.torcedor.digital.utils.DateNow;
 import servidor.torcedor.digital.utils.SenderMailService;
-import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.Faturamento;
 
 @Component
-public class CartaoFaturamentoDAO {
+public class FaturamentoDAO {
 	
-	private static final Logger logger = LoggerFactory.getLogger(CartaoFaturamentoDAO.class);
+	private static final Logger logger = LoggerFactory.getLogger(FaturamentoDAO.class);
 	
 	@Autowired
 	private EntityManager em;
 	
 	@Autowired
-	private CartaoFaturamentoRepository repo;
+	private FaturamentoRepository repo;
 	
 	@Autowired
 	private UsuarioDAO usuarioDAO;
@@ -51,12 +51,12 @@ public class CartaoFaturamentoDAO {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<CartaoFaturamento> buscaFaturaUsuario(Long idUsuario) {
+	public List<Faturamento> buscaFaturaUsuario(Long idUsuario) {
 		
 		try {
-			String sql = "SELECT * FROM cartao_faturamento WHERE id_usuario=:idUsuario";
+			String sql = "SELECT * FROM faturamento WHERE id_usuario=:idUsuario";
 			return 	em
-					.createNativeQuery(sql, CartaoFaturamento.class)
+					.createNativeQuery(sql, Faturamento.class)
 					.setParameter("idUsuario", idUsuario)
 					.getResultList();
 					
@@ -68,14 +68,36 @@ public class CartaoFaturamentoDAO {
 		return null;
 	}
 	
+	/**
+	 * Busca de endereco de um usuario
+	 * @param idUsuario
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public List<CartaoFaturamento> buscaFaturasConcluidas() {
+	public Faturamento buscaFatura(String idFatura) {
 		
 		try {
-			String sql = "SELECT * FROM cartao_faturamento WHERE status='concluido'";
+			String sql = "SELECT * FROM faturamento WHERE id_usuario=:idFatura";
+			return 	(Faturamento) em
+					.createNativeQuery(sql, Faturamento.class)
+					.setParameter("idFatura", idFatura).getSingleResult();
+					
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Faturamento> buscaFaturasConcluidas() {
+		
+		try {
+			String sql = "SELECT * FROM faturamento WHERE status='concluido'";
 			
 			return 	em
-					.createNativeQuery(sql, CartaoFaturamento.class)
+					.createNativeQuery(sql, Faturamento.class)
 					.getResultList();
 			
 			
@@ -87,7 +109,7 @@ public class CartaoFaturamentoDAO {
 		return null;
 	}
 	
-	public CartaoFaturamento salvarOuAtualizarCartaoFaturamento(Map<String, String> enderecoInfo) throws ParseException {
+	public Faturamento salvarOuAtualizarCartaoFaturamento(Map<String, String> enderecoInfo) throws ParseException {
 		
 		String idJogo = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("id_jogo")).findAny().get().getValue();
 		String email = enderecoInfo.entrySet().stream().filter(e -> e.getKey().equals("email")).findAny().get().getValue();
@@ -99,7 +121,7 @@ public class CartaoFaturamentoDAO {
 		
 		Usuario usuario = usuarioDAO.buscaUsuarioPorEmail(email);
 		
-		CartaoFaturamento novo = novaFatura(numeroCartao, bandeira, validade, codigo, quantidade, idJogo,usuario);
+		Faturamento novo = novaFatura(numeroCartao, bandeira, validade, codigo, quantidade, idJogo,usuario);
 		
 		senderMailService.send(email, "Obrigado por Compra seu ingresso pelo Torcedor Digital","Assim que confirmamos o pagamento estaremos enviado o seu ingresso.");
 		
@@ -108,17 +130,13 @@ public class CartaoFaturamentoDAO {
 		
 	}
 
-	private CartaoFaturamento novaFatura(String numeroCartao, String bandeira, String validade, String codigo,
+	private Faturamento novaFatura(String numeroCartao, String bandeira, String validade, String codigo,
 			String quantidade, String idJogo,Usuario usuario) throws ParseException {
 		
-		CartaoFaturamento cartaFatura = new CartaoFaturamento();
+		Faturamento cartaFatura = new Faturamento();
 		cartaFatura.setIdUsuario(usuario.getId());
 		cartaFatura.setIdJogo(Long.valueOf(idJogo));
-		cartaFatura.setNumero(numeroCartao);
-		cartaFatura.setBandeira(bandeira);
-		cartaFatura.setDataExp(DateNow.formatDateSemTime(validade));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
-		cartaFatura.setCodigoCCV(codigo);
 		cartaFatura.setQuantidade(Integer.valueOf(quantidade));
 		cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(quantidade)));
 		
@@ -129,30 +147,48 @@ public class CartaoFaturamentoDAO {
 		return Integer.valueOf(quantidade) * valorUnitario;
 	}
 
-	public CartaoFaturamento salvarOuAtualizarCartaoFaturamento(ResponseNotification response) {
-		String idJogo = response.getCustom();
+	public Faturamento salvarOuAtualizarFaturamento(ResponseNotification response) {
+		
 		String email = response.getPayer_email();
-		String quantidade = response.getQuantity();
-		// ver validação para geração do ticket
-		String status = response.getPayment_status();
+		Faturamento fatura = buscaFatura(response.getTxn_id());
+		
+		if(fatura!=null) {
+			fatura.setStatus(response.getPayment_status());
+			fatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
+			criarTicket(response.getPayment_status());
+			return repo.save(fatura);
+		}
 		
 		
 		Usuario usuario = usuarioDAO.buscaUsuarioPorEmail(email);
 		
-		CartaoFaturamento novo = novaFatura(quantidade, idJogo,status, usuario);
+		Faturamento novo = novaFatura(response, usuario);
 		
+		// fução para criação de ticket
+		criarTicket(response.getPayment_status());
+				
 		senderMailService.send(email, "Obrigado por Compra seu ingresso pelo Torcedor Digital","Assim que confirmamos o pagamento estaremos enviado o seu ingresso.");
 		
 		return repo.save(novo);
 	}
 
-	private CartaoFaturamento novaFatura(String quantidade, String idJogo, String status, Usuario usuario) {
-		CartaoFaturamento cartaFatura = new CartaoFaturamento();
+	/**
+	 * Método responsavel pela criação de um ticket se 
+	 * status da fatura for completed
+	 * @param status
+	 */
+	private void criarTicket(String status) {
+		System.out.println("ESTATUS DA FATURA:::::"+status);
+	}
+
+	private Faturamento novaFatura(ResponseNotification response, Usuario usuario) {
+		Faturamento cartaFatura = new Faturamento();
 		cartaFatura.setIdUsuario(usuario.getId());
-		cartaFatura.setIdJogo(Long.valueOf(idJogo));
+		cartaFatura.setIdTransacao(Long.valueOf(response.getTxn_id()));
+		cartaFatura.setIdJogo(Long.valueOf(response.getCustom()));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
-		cartaFatura.setQuantidade(Integer.valueOf(quantidade));
-		cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(quantidade)));
+		cartaFatura.setQuantidade(Integer.valueOf(response.getQuantity()));
+		cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(response.getQuantity())));
 		
 		return cartaFatura;
 	}

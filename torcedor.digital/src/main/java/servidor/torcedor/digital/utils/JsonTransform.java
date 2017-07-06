@@ -10,7 +10,7 @@ import org.apache.tomcat.util.buf.UEncoder.SafeCharsSet;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
-import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.Faturamento;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
@@ -90,7 +90,7 @@ public class JsonTransform {
 	 * @param cartaFatura
 	 * @return
 	 */
-	public static String jsonCheckout(Endereco endereco, CartaoFaturamento cartaFatura) {
+	public static String jsonCheckout(Endereco endereco, Faturamento cartaFatura) {
 		Gson json = new Gson();
 		
 		StringBuilder checkoutFormat = new StringBuilder();

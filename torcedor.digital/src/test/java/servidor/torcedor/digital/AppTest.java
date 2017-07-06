@@ -28,12 +28,12 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 
 import junit.framework.Assert;
-import servidor.torcedor.digital.DAO.CartaoFaturamentoDAO;
+import servidor.torcedor.digital.DAO.FaturamentoDAO;
 import servidor.torcedor.digital.DAO.EnderecoDAO;
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.jdbc.FaturaJDBC;
 import servidor.torcedor.digital.jdbc.SimpleJdbcConection;
-import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.Faturamento;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
@@ -58,7 +58,7 @@ public class AppTest {
 	private EnderecoDAO enderecoDAO;
 
 	@Autowired
-	private CartaoFaturamentoDAO cartaFatura;
+	private FaturamentoDAO cartaFatura;
 
 	@Autowired
 	private RankRepository rank;
@@ -205,7 +205,7 @@ public class AppTest {
 		map.put("quantidade", "2");
 		map.put("data_criacao", "2017-06-10 00:00:00");
 
-		CartaoFaturamento faturamento = cartaFatura.salvarOuAtualizarCartaoFaturamento(map);
+		Faturamento faturamento = cartaFatura.salvarOuAtualizarCartaoFaturamento(map);
 
 		System.out.println(faturamento);
 		assertTrue(!java.util.Objects.isNull(faturamento));
@@ -215,7 +215,7 @@ public class AppTest {
 	@Test
 	public void test_buscaFaturasConcluidas() {
 
-		List<CartaoFaturamento> teste = cartaFatura.buscaFaturasConcluidas();
+		List<Faturamento> teste = cartaFatura.buscaFaturasConcluidas();
 
 		System.out.println(teste);
 
@@ -224,7 +224,7 @@ public class AppTest {
 	@Test
 	public void test_jdbcSingleConection() {
 		FaturaJDBC jdbc = new FaturaJDBC();
-		List<CartaoFaturamento> lista = jdbc.listFaturamento();
+		List<Faturamento> lista = jdbc.listFaturamento();
 		System.out.print("quatidade :"+lista.size());
 		System.out.println(lista);
 	}
