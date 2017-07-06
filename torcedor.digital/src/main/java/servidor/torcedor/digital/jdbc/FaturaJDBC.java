@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import servidor.torcedor.digital.models.CartaoFaturamento;
+import servidor.torcedor.digital.models.Faturamento;
 
 public class FaturaJDBC {
 
@@ -33,10 +33,10 @@ public class FaturaJDBC {
 		}
 	}
 
-	public List<CartaoFaturamento> listFaturamento() {
+	public List<Faturamento> listFaturamento() {
 
 		Statement stmt = null;
-		List<CartaoFaturamento> lista = Lists.newArrayList();
+		List<Faturamento> lista = Lists.newArrayList();
 
 		try {
 			stmt = this.conn.createStatement();
@@ -47,11 +47,8 @@ public class FaturaJDBC {
 			// STEP 5: Extract data from result set
 			while (rs.next()) {
 				// Retrieve by column name
-				CartaoFaturamento cartaFatura = new CartaoFaturamento();
-				cartaFatura.setBandeira(rs.getString("bandeira"));
-				cartaFatura.setCodigoCCV(rs.getString("codigo_ccv"));
+				Faturamento cartaFatura = new Faturamento();
 				cartaFatura.setDataCriacao(rs.getTimestamp("data_criacao"));
-				cartaFatura.setDataExp(rs.getTimestamp("data_exp"));
 				cartaFatura.setIdUsuario(rs.getLong("id_usuario"));
 
 				lista.add(cartaFatura);

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import servidor.torcedor.digital.models.Endereco;
+import servidor.torcedor.digital.models.ResponseNotification;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.repositories.EnderecoRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
@@ -99,6 +100,43 @@ public class EnderecoDAO {
 		endereco.setLogradouro(logradouro);
 		endereco.setObs(complemento);
 		endereco.setNumero(numero);
+		endereco.setCriacao(Timestamp.valueOf(DateNow.getDateNow()));
+		endereco.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
+		return endereco;
+	}
+
+	public Endereco salvarOuAtualizarEndereco(ResponseNotification response) {
+		String email = response.getPayer_email();
+		String cep = response.getAddress_zip();
+		String estado = response.getAddress_state();
+		String cidade = response.getAddress_city();
+		String bairro = response.getAddress_name();
+		String logradouro = response.getAddress_street();
+		
+		Usuario usuario = usuarioDAO.buscaUsuarioPorEmail(email);
+		
+				
+		Endereco endereco = buscaEnderecoUsuario(usuario.getId());
+		
+		if(endereco!=null) {
+			endereco.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
+			return enderecoRepo.save(endereco);			
+		}
+		
+		Endereco novo = novoEndereco(cep, estado, cidade, bairro, logradouro, usuario);
+		
+		return enderecoRepo.save(novo);
+	}
+
+	private Endereco novoEndereco(String cep, String estado, String cidade, String bairro, String logradouro,
+			Usuario usuario) {
+		Endereco endereco = new Endereco();
+		endereco.setIdUsuario(usuario.getId());
+		endereco.setCep(cep);
+		endereco.setEstado(estado);
+		endereco.setCidade(cidade);
+		endereco.setBairro(bairro);
+		endereco.setLogradouro(logradouro);
 		endereco.setCriacao(Timestamp.valueOf(DateNow.getDateNow()));
 		endereco.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 		return endereco;

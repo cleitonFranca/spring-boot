@@ -13,40 +13,35 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "cartao_faturamento")
-public class CartaoFaturamento implements Serializable {
+@Table
+public class Faturamento implements Serializable {
 
 	private static final long serialVersionUID = 4733099478667887786L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@NotNull
-	@Column(name="id_usuario")
+	@Column(name = "id_usuario")
 	private Long idUsuario;
-	
+
 	@NotNull
-	@Column(name="id_jogo")
+	@Column(name = "id_jogo")
 	private Long idJogo;
-	
-	
-	private String bandeira;
-	
-	private String numero;
-	@Column(name="codigo_ccv")
-	private String CodigoCCV;
-	@Column(name="data_exp")
-	private Timestamp dataExp;
-	@Column(name="data_criacao")
+
+	@Column(name = "id_transacao")
+	private Long idTransacao;
+
+	@Column(name = "data_criacao")
 	private Timestamp dataCriacao;
 	@NotNull
 	private Integer quantidade;
 	@NotNull
-	@Column(name="valor_total")
+	@Column(name = "valor_total")
 	private BigDecimal valorTotal;
-	@Column(name="ultima_atualizacao")
+	@Column(name = "ultima_atualizacao")
 	private Timestamp ultimaAtualizacao;
-	
+
 	private String status;
 
 	public Long getId() {
@@ -63,38 +58,6 @@ public class CartaoFaturamento implements Serializable {
 
 	public void setIdUsuario(Long idUsuario) {
 		this.idUsuario = idUsuario;
-	}
-
-	public String getBandeira() {
-		return bandeira;
-	}
-
-	public void setBandeira(String bandeira) {
-		this.bandeira = bandeira;
-	}
-
-	public String getNumero() {
-		return numero;
-	}
-
-	public void setNumero(String numero) {
-		this.numero = numero;
-	}
-
-	public String getCodigoCCV() {
-		return CodigoCCV;
-	}
-
-	public void setCodigoCCV(String codigoCCV) {
-		CodigoCCV = codigoCCV;
-	}
-
-	public Timestamp getDataExp() {
-		return dataExp;
-	}
-
-	public void setDataExp(Timestamp dataExp) {
-		this.dataExp = dataExp;
 	}
 
 	public Timestamp getDataCriacao() {
@@ -137,7 +100,6 @@ public class CartaoFaturamento implements Serializable {
 		this.valorTotal = valorTotal;
 	}
 
-	
 	public Long getIdJogo() {
 		return idJogo;
 	}
@@ -146,19 +108,19 @@ public class CartaoFaturamento implements Serializable {
 		this.idJogo = idJogo;
 	}
 
-	@Override
-	public String toString() {
-		return "CartaoFaturamento [id=" + id + ", idUsuario=" + idUsuario + ", idJogo=" + idJogo + ", bandeira="
-				+ bandeira + ", numero=" + numero + ", CodigoCCV=" + CodigoCCV + ", dataExp=" + dataExp
-				+ ", dataCriacao=" + dataCriacao + ", quantidade=" + quantidade + ", valorTotal=" + valorTotal
-				+ ", ultimaAtualizacao=" + ultimaAtualizacao + ", status=" + status + "]";
+	public Long getIdTransacao() {
+		return idTransacao;
 	}
 
-	
+	public void setIdTransacao(Long idTransacao) {
+		this.idTransacao = idTransacao;
+	}
 
-	
-	
-	
-	
+	@Override
+	public String toString() {
+		return "Faturamento [id=" + id + ", idUsuario=" + idUsuario + ", idJogo=" + idJogo + ", idTransacao="
+				+ idTransacao + ", dataCriacao=" + dataCriacao + ", quantidade=" + quantidade + ", valorTotal="
+				+ valorTotal + ", ultimaAtualizacao=" + ultimaAtualizacao + ", status=" + status + "]";
+	}
 
 }
