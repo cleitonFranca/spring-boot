@@ -36,7 +36,7 @@ public class Endereco implements Serializable{
 	private String logradouro;
 	
 	private String obs;
-	@NotNull
+	
 	private String numero;
 	
 	private Timestamp criacao;
