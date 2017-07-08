@@ -172,14 +172,14 @@ public class FaturamentoDAO {
 			usuario.setAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 			usuarioRepo.save(usuario);
 		}
-		/*Faturamento fatura = buscaFatura(response.getTxn_id());
+		Faturamento fatura = buscaFatura(response.getTxn_id());
 		
 		if(fatura!=null) {
 			fatura.setStatus(response.getPayment_status());
 			fatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 			criarTicket(response.getPayment_status());
 			return repo.save(fatura);
-		}*/
+		}
 		
 		Faturamento novo = novaFatura(response, usuario);
 		
@@ -208,10 +208,11 @@ public class FaturamentoDAO {
 		cartaFatura.setIdJogo(Long.valueOf(response.getCustom()));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
 		cartaFatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
-		Integer quantidade = !Strings.isNullOrEmpty(response.getQuantity()) ? Integer.valueOf(response.getQuantity()): 0;
-		cartaFatura.setQuantidade(quantidade);
-		cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(response.getQuantity())));
-		cartaFatura.setStatus(response.getPayment_status());
+		if(!Strings.isNullOrEmpty(response.getQuantity())) {
+			cartaFatura.setQuantidade(Integer.valueOf(response.getQuantity()));
+			cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(response.getQuantity())));
+		}
+			cartaFatura.setStatus(response.getPayment_status());
 		return cartaFatura;
 	}
 
