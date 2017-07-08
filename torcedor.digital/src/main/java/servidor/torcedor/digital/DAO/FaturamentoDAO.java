@@ -78,17 +78,18 @@ public class FaturamentoDAO {
 	 * @param idUsuario
 	 * @return
 	 */
-	public Faturamento buscaFatura(String transacao) {
+	public Faturamento buscaFatura(String id_jogo) {
 		
 		try {
-			String sql = "SELECT * FROM faturamento WHERE id_transacao=:transacao limit 1";
+			String sql = "SELECT * FROM faturamento WHERE id_jogo=:id_jogo limit 1";
 			return 	(Faturamento) em
 					.createNativeQuery(sql, Faturamento.class)
-					.setParameter("transacao", transacao).getSingleResult();
+					.setParameter("id_jogo", id_jogo).getSingleResult();
 					
 			
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error(id_jogo, e.getCause());
+			e.printStackTrace();
 		}
 		
 		return null;
@@ -170,7 +171,8 @@ public class FaturamentoDAO {
 			usuario.setAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 			usuarioRepo.save(usuario);
 		}
-		Faturamento fatura = buscaFatura(response.getTxn_id());
+		// -->
+		Faturamento fatura = buscaFatura(response.getCustom());
 		
 		if(fatura!=null) {
 			fatura.setStatus(response.getPayment_status());
