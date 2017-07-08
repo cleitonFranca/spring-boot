@@ -208,10 +208,11 @@ public class FaturamentoDAO {
 		cartaFatura.setIdJogo(Long.valueOf(response.getCustom()));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
 		cartaFatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
-		if(!Strings.isNullOrEmpty(response.getQuantity())) {
-			cartaFatura.setQuantidade(Integer.valueOf(response.getQuantity()));
-			cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(response.getQuantity())));
-		}
+		Integer quant = !Strings.isNullOrEmpty(response.getQuantity()) ? Integer.valueOf(response.getQuantity()): 0;
+		cartaFatura.setQuantidade(quant);
+		BigDecimal valorTotal = quant>0 ? BigDecimal.valueOf(calculaValorFatura(response.getQuantity())) : new BigDecimal("0.00");
+		cartaFatura.setValorTotal(valorTotal);
+		
 			cartaFatura.setStatus(response.getPayment_status());
 		return cartaFatura;
 	}
