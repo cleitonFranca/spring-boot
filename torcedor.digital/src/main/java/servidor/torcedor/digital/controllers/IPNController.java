@@ -33,9 +33,12 @@ public class IPNController {
 	public String apiLogin(@ModelAttribute("ResponseNotification") ResponseNotification response) throws Exception {
 		Gson json = new Gson();
 		logger.info(json.toJson(response));
-		
-		salvarOuAtualizarEndereco(response);
+		/**
+		 * #1 cria novoFaturamento
+		 * #2 savalvar ou atualizar endereço.
+		 */
 		novoFaturamento(response);
+		salvarOuAtualizarEndereco(response);
 		
 		return json.toJson(response);
 		
