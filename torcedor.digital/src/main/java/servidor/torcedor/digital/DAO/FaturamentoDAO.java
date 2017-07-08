@@ -210,7 +210,8 @@ public class FaturamentoDAO {
 		cartaFatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 		Integer quant = !Strings.isNullOrEmpty(response.getQuantity()) ? Integer.valueOf(response.getQuantity()): 0;
 		cartaFatura.setQuantidade(quant);
-		BigDecimal valorTotal = quant>0 ? BigDecimal.valueOf(calculaValorFatura(response.getQuantity())) : new BigDecimal("0.00");
+		
+		BigDecimal valorTotal = !Strings.isNullOrEmpty(response.getMc_gross()) ? new BigDecimal(response.getMc_gross()) : new BigDecimal("0.00");
 		cartaFatura.setValorTotal(valorTotal);
 		
 			cartaFatura.setStatus(response.getPayment_status());
