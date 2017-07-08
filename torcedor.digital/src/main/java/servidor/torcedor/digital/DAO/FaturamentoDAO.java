@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.common.base.Strings;
+
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.ResponseNotification;
 import servidor.torcedor.digital.models.Usuario;
@@ -78,18 +80,17 @@ public class FaturamentoDAO {
 	 * @param idUsuario
 	 * @return
 	 */
-	public Faturamento buscaFatura(String id_jogo) {
+	public Faturamento buscaFatura(String transacao) {
 		
 		try {
-			String sql = "SELECT * FROM faturamento WHERE id_jogo=:id_jogo limit 1";
+			String sql = "SELECT * FROM faturamento WHERE id_transacao=:transacao limit 1";
 			return 	(Faturamento) em
 					.createNativeQuery(sql, Faturamento.class)
-					.setParameter("id_jogo", id_jogo).getSingleResult();
+					.setParameter("transacao", transacao).getSingleResult();
 					
 			
 		} catch (Exception e) {
-			logger.error(id_jogo, e.getCause());
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		
 		return null;
@@ -171,15 +172,14 @@ public class FaturamentoDAO {
 			usuario.setAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 			usuarioRepo.save(usuario);
 		}
-		// -->
-		Faturamento fatura = buscaFatura(response.getCustom());
+		/*Faturamento fatura = buscaFatura(response.getTxn_id());
 		
 		if(fatura!=null) {
 			fatura.setStatus(response.getPayment_status());
 			fatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 			criarTicket(response.getPayment_status());
 			return repo.save(fatura);
-		}
+		}*/
 		
 		Faturamento novo = novaFatura(response, usuario);
 		
@@ -208,7 +208,8 @@ public class FaturamentoDAO {
 		cartaFatura.setIdJogo(Long.valueOf(response.getCustom()));
 		cartaFatura.setDataCriacao(Timestamp.valueOf(DateNow.getDateNow()));
 		cartaFatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
-		cartaFatura.setQuantidade(Integer.valueOf(response.getQuantity()));
+		Integer quantidade = !Strings.isNullOrEmpty(response.getQuantity()) ? Integer.valueOf(response.getQuantity()): 0;
+		cartaFatura.setQuantidade(quantidade);
 		cartaFatura.setValorTotal(BigDecimal.valueOf(calculaValorFatura(response.getQuantity())));
 		cartaFatura.setStatus(response.getPayment_status());
 		return cartaFatura;
