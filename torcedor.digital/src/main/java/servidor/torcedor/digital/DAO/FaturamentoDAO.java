@@ -225,15 +225,11 @@ public class FaturamentoDAO {
 
 	@SuppressWarnings("deprecation")
 	private void criarTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
-		Calendario jogo = calendarioRepo.getOne(Long.valueOf(response.getCustom()));
+		//Calendario jogo = calendarioRepo.getOne(Long.valueOf(response.getCustom()));
 		int q = Integer.valueOf(response.getQuantity());
 		
 		for(int i = 0; i <= q; i++){			
 			Ingresso ticket = new Ingresso();
-			Date dataInicio = new Date(jogo.getDataInicio());
-			ticket.setDataInicio(DateNow.formatDate(dataInicio.toString()));
-			Date dataFim = new Date(jogo.getDataFim());
-			ticket.setDataFim(DateNow.formatDate(dataFim.toString()));
 			ticket.setIdFatura(idFatura);
 			ticket.setIdJogo(Long.valueOf(response.getCustom()));
 			ticket.setIdUsuario(idUsuario);
