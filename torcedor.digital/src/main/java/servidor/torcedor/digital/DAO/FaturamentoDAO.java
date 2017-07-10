@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -222,14 +223,17 @@ public class FaturamentoDAO {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void criarTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
 		Calendario jogo = calendarioRepo.getOne(Long.valueOf(response.getCustom()));
 		int q = Integer.valueOf(response.getQuantity());
 		
 		for(int i = 0; i <= q; i++){			
 			Ingresso ticket = new Ingresso();
-			ticket.setDataInicio(DateNow.formatDate(jogo.getDataInicio()));
-			ticket.setDataFim(DateNow.formatDate(jogo.getDataFim()));
+			Date dataInicio = new Date(jogo.getDataInicio());
+			ticket.setDataInicio(DateNow.formatDate(dataInicio.toString()));
+			Date dataFim = new Date(jogo.getDataFim());
+			ticket.setDataFim(DateNow.formatDate(dataFim.toString()));
 			ticket.setIdFatura(idFatura);
 			ticket.setIdJogo(Long.valueOf(response.getCustom()));
 			ticket.setIdUsuario(idUsuario);
