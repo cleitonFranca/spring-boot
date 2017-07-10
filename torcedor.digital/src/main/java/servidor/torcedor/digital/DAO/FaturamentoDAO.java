@@ -17,16 +17,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
+import servidor.torcedor.digital.models.Calendario;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.ResponseNotification;
 import servidor.torcedor.digital.models.Usuario;
+import servidor.torcedor.digital.repositories.CalendarioRepository;
 import servidor.torcedor.digital.repositories.FaturamentoRepository;
+import servidor.torcedor.digital.repositories.IngressoRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
 import servidor.torcedor.digital.utils.DateNow;
 import servidor.torcedor.digital.utils.SenderMailService;
 import servidor.torcedor.digital.models.Faturamento;
+import servidor.torcedor.digital.models.Ingresso;
+
 
 @Component
 public class FaturamentoDAO {
@@ -38,6 +44,12 @@ public class FaturamentoDAO {
 	
 	@Autowired
 	private FaturamentoRepository repo;
+	
+	@Autowired
+	private IngressoRepository ingressoRepo;
+	
+	@Autowired
+	private CalendarioRepository calendarioRepo;
 	
 	@Autowired
 	private UsuarioDAO usuarioDAO;
@@ -177,14 +189,14 @@ public class FaturamentoDAO {
 		if(fatura!=null) {
 			fatura.setStatus(response.getPayment_status());
 			fatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
-			criarTicket(response.getPayment_status());
+			preTicket(response, fatura.getId(), usuario.getId());
 			return repo.save(fatura);
 		}
 		
 		Faturamento novo = novaFatura(response, usuario);
 		
 		// fução para criação de ticket
-		criarTicket(response.getPayment_status());
+		preTicket(response, novo.getId(), usuario.getId());
 				
 		senderMailService.send(email, "Obrigado por Compra seu ingresso pelo Torcedor Digital","Assim que confirmamos o pagamento estaremos enviado o seu ingresso.");
 		
@@ -195,10 +207,38 @@ public class FaturamentoDAO {
 	 * Método responsavel pela criação de um ticket se 
 	 * status da fatura for completed
 	 * @param status
+	 * @throws ParseException 
 	 */
-	private void criarTicket(String status) {
-		System.out.println("ESTATUS DA FATURA:::::"+status);
+	private void preTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
 		
+		switch (response.getPayment_status()) {
+		case "Completed":
+			criarTicket(response, idFatura, idUsuario);
+			break;
+
+		default:
+			break;
+		}
+
+	}
+
+	private void criarTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
+		Calendario jogo = calendarioRepo.getOne(Long.valueOf(response.getCustom()));
+		int q = Integer.valueOf(response.getQuantity());
+		
+		for(int i = 0; i <= q; i++){			
+			Ingresso ticket = new Ingresso();
+			ticket.setDataInicio(DateNow.formatDate(jogo.getDataInicio()));
+			ticket.setDataFim(DateNow.formatDate(jogo.getDataFim()));
+			ticket.setIdFatura(idFatura);
+			ticket.setIdJogo(Long.valueOf(response.getCustom()));
+			ticket.setIdUsuario(idUsuario);
+			ticket.setStatus(true);
+			ticket.setUrl("http://api.qrserver.com/v1/create-qr-code/?data=http://torcedordigital.com/api/pontuarIngresso?id=" + idUsuario + "&amp;size=300x500");
+			
+		}
+		
+		senderMailService.send(response.getPayer_email(), "Obrigado por Compra seu ingresso pelo Torcedor Digital","Seus ingressos já pode ser visualizados em seu aplicatico");
 	}
 
 	private Faturamento novaFatura(ResponseNotification response, Usuario usuario) {
