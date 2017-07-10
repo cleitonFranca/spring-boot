@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Ingresso implements Serializable{
+public class Ingresso implements Serializable {
 
 	private static final long serialVersionUID = 1612359462992212627L;
 	
@@ -22,6 +22,12 @@ public class Ingresso implements Serializable{
 	@NotNull
 	@Column(name="id_usuario")
 	private Long idUsuario;
+	@NotNull
+	@Column(name="id_fatura")
+	private Long idFatura;
+	@NotNull
+	@Column(name="id_jogo")
+	private Long idJogo;
 	@Column(name="data_inicio")
 	private Timestamp dataInicio;
 	@Column(name="data_fim")
@@ -78,12 +84,32 @@ public class Ingresso implements Serializable{
 	public void setStatus(boolean status) {
 		this.status = status;
 	}
+	
+	
+
+	public Long getIdFatura() {
+		return idFatura;
+	}
+
+	public void setIdFatura(Long idFatura) {
+		this.idFatura = idFatura;
+	}
+
+	public Long getIdJogo() {
+		return idJogo;
+	}
+
+	public void setIdJogo(Long idJogo) {
+		this.idJogo = idJogo;
+	}
 
 	@Override
 	public String toString() {
-		return "Ingresso [id=" + id + ", idUsuario=" + idUsuario + ", dataInicio=" + dataInicio + ", dataFim=" + dataFim
-				+ ", url=" + url + ", status=" + status + "]";
+		return "Ingresso [id=" + id + ", idUsuario=" + idUsuario + ", idFatura=" + idFatura + ", idJogo=" + idJogo
+				+ ", dataInicio=" + dataInicio + ", dataFim=" + dataFim + ", url=" + url + ", status=" + status + "]";
 	}
+
+	
 	
 	
 	
