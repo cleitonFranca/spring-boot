@@ -225,7 +225,7 @@ public class FaturamentoDAO {
 
 	@SuppressWarnings("deprecation")
 	private void criarTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
-		//Calendario jogo = calendarioRepo.getOne(Long.valueOf(response.getCustom()));
+		
 		int q = Integer.valueOf(response.getQuantity());
 		
 		for(int i = 0; i <= q; i++){			
@@ -235,6 +235,7 @@ public class FaturamentoDAO {
 			ticket.setIdUsuario(idUsuario);
 			ticket.setStatus(true);
 			ticket.setUrl("http://api.qrserver.com/v1/create-qr-code/?data=http://torcedordigital.com/api/pontuarIngresso?id=" + idUsuario + "&amp;size=300x500");
+			ingressoRepo.save(ticket);
 			
 		}
 		
