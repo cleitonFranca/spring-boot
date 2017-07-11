@@ -227,19 +227,24 @@ public class FaturamentoDAO {
 	private void criarTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
 		
 		int q = Integer.valueOf(response.getQuantity());
-		
+		Long fatura = idFatura;
+		System.out.println("1 -> "+fatura);
 		for(int i = 0; i <= q; i++){			
 			Ingresso ticket = new Ingresso();
-			ticket.setIdFatura(idFatura);
+			System.out.println(i +" -> "+fatura);
+			ticket.setIdFatura(fatura);
 			ticket.setIdJogo(Long.valueOf(response.getCustom()));
 			ticket.setIdUsuario(idUsuario);
 			ticket.setStatus(true);
 			ticket.setUrl("http://api.qrserver.com/v1/create-qr-code/?data=http://torcedordigital.com/api/pontuarIngresso?id=" + idUsuario + "&amp;size=300x500");
-			ingressoRepo.save(ticket);
-			
+			salvarIngresso(ticket);	
 		}
 		
 		senderMailService.send(response.getPayer_email(), "Obrigado por Compra seu ingresso pelo Torcedor Digital","Seus ingressos já pode ser visualizados em seu aplicatico");
+	}
+
+	private void salvarIngresso(Ingresso ticket) {
+		ingressoRepo.save(ticket);
 	}
 
 	private Faturamento novaFatura(ResponseNotification response, Usuario usuario) {
