@@ -28,7 +28,7 @@
  
              <!--Vendedor e URL de retorno, cancelamento e notificação-->
              <input type="hidden" name="business" value="profissional.cleiton-facilitator@gmail.com" />
-             <input type="hidden" name="return" value="http://loja.com.br/retorno" />
+             <input type="hidden" name="return" value="http://torcedordigital.com/checkout/success" />
              <input type="hidden" name="cancel" value="http://loja.com.br/cancelamento" />
              <input type="hidden" name="notify_url" value="http://torcedordigital.com/api/ipn/notification" />
  
