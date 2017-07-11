@@ -190,14 +190,15 @@ public class FaturamentoDAO {
 		if(fatura!=null) {
 			fatura.setStatus(response.getPayment_status());
 			fatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
-			preTicket(response, fatura.getId(), usuario.getId());
+			
+			preTicket(response, fatura.getIdTransacao(), usuario.getId());
 			return repo.save(fatura);
 		}
 		
 		Faturamento novo = novaFatura(response, usuario);
 		
 		// fução para criação de ticket
-		preTicket(response, novo.getId(), usuario.getId());
+		preTicket(response, novo.getIdTransacao(), usuario.getId());
 				
 		senderMailService.send(email, "Obrigado por Compra seu ingresso pelo Torcedor Digital","Assim que confirmamos o pagamento estaremos enviado o seu ingresso.");
 		
@@ -210,11 +211,11 @@ public class FaturamentoDAO {
 	 * @param status
 	 * @throws ParseException 
 	 */
-	private void preTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
+	private void preTicket(ResponseNotification response, String trancacao, Long idUsuario) throws ParseException {
 		
 		switch (response.getPayment_status()) {
 		case "Completed":
-			criarTicket(response, idFatura, idUsuario);
+			criarTicket(response, trancacao, idUsuario);
 			break;
 
 		default:
@@ -224,15 +225,14 @@ public class FaturamentoDAO {
 	}
 
 	@SuppressWarnings("deprecation")
-	private void criarTicket(ResponseNotification response, Long idFatura, Long idUsuario) throws ParseException {
+	private void criarTicket(ResponseNotification response, String trancacao, Long idUsuario) throws ParseException {
 		
 		int q = Integer.valueOf(response.getQuantity());
-		Long fatura = idFatura;
-		System.out.println("1 -> "+fatura);
+	
+		
 		for(int i = 0; i <= q; i++){			
 			Ingresso ticket = new Ingresso();
-			System.out.println(i +" -> "+fatura);
-			ticket.setIdFatura(fatura);
+			ticket.setIdTransacao(trancacao);
 			ticket.setIdJogo(Long.valueOf(response.getCustom()));
 			ticket.setIdUsuario(idUsuario);
 			ticket.setStatus(true);

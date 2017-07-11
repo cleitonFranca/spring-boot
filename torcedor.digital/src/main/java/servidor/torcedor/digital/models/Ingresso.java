@@ -23,8 +23,8 @@ public class Ingresso implements Serializable {
 	@Column(name="id_usuario")
 	private Long idUsuario;
 	@NotNull
-	@Column(name="id_fatura")
-	private Long idFatura;
+	@Column(name="id_transacao")
+	private String idTransacao;
 	@NotNull
 	@Column(name="id_jogo")
 	private Long idJogo;
@@ -85,14 +85,12 @@ public class Ingresso implements Serializable {
 		this.status = status;
 	}
 	
-	
-
-	public Long getIdFatura() {
-		return idFatura;
+	public String getIdTransacao() {
+		return idTransacao;
 	}
 
-	public void setIdFatura(Long idFatura) {
-		this.idFatura = idFatura;
+	public void setIdTransacao(String idTransacao) {
+		this.idTransacao = idTransacao;
 	}
 
 	public Long getIdJogo() {
@@ -105,10 +103,11 @@ public class Ingresso implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ingresso [id=" + id + ", idUsuario=" + idUsuario + ", idFatura=" + idFatura + ", idJogo=" + idJogo
+		return "Ingresso [id=" + id + ", idUsuario=" + idUsuario + ", idTransacao=" + idTransacao + ", idJogo=" + idJogo
 				+ ", dataInicio=" + dataInicio + ", dataFim=" + dataFim + ", url=" + url + ", status=" + status + "]";
 	}
 
+	
 	
 	
 	
