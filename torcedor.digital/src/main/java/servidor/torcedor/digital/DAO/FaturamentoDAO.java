@@ -191,7 +191,6 @@ public class FaturamentoDAO {
 		if(fatura!=null) {
 			fatura.setStatus(response.getPayment_status());
 			fatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
-			
 			preTicket(response, fatura.getItem_transacao(), usuario.getId());
 			return repo.save(fatura);
 		}

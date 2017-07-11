@@ -43,6 +43,7 @@
              <!--Informações sobre o produto e seu valor-->
              <input type="hidden" name="amount" value="${valor}" />
              <input type="hidden" name="item_name" value="Venda de Ingresso de Futebol" />
+             <input type="hidden" name="item_number" value="${item_transacao}" /> 
              <input type="hidden" name="quantity" value="${quantidade}" />
              <!-- Identificador para ingresso -->
              <input type="hidden" name="custom" value="${id_jogo}" />

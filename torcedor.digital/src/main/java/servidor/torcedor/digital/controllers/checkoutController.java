@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import servidor.torcedor.digital.utils.JsonTransform;
+import servidor.torcedor.digital.utils.PassRandom;
 
 @Controller
 public class checkoutController {
@@ -27,6 +28,7 @@ public class checkoutController {
 			model.addAttribute("id_jogo", id_jogo);
 			model.addAttribute("quantidade", quantidade);
 			model.addAttribute("valor", valor);
+			model.addAttribute("item_transacao", PassRandom.getRandomPass(30));
 			
 		} catch (Exception e) {
 			return JsonTransform.jsonError(res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Falha na criação de checkout");
