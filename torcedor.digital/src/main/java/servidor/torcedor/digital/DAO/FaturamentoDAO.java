@@ -230,7 +230,7 @@ public class FaturamentoDAO {
 		int q = Integer.valueOf(response.getQuantity());
 	
 		
-		for(int i = 0; i <= q; i++){			
+		for(int i = 1; i <= q; i++){			
 			Ingresso ticket = new Ingresso();
 			ticket.setItemTransacao(trancacao);
 			ticket.setIdJogo(Long.valueOf(response.getCustom()));
