@@ -32,6 +32,9 @@ public class Faturamento implements Serializable {
 
 	@Column(name = "id_transacao")
 	private String idTransacao;
+	
+	@Column(name = "item_transacao")
+	private String item_transacao;
 
 	@Column(name = "data_criacao")
 	private Timestamp dataCriacao;
@@ -118,12 +121,24 @@ public class Faturamento implements Serializable {
 	public void setIdTransacao(String idTransacao) {
 		this.idTransacao = idTransacao;
 	}
+	
+	
+	public String getItem_transacao() {
+		return item_transacao;
+	}
+
+	public void setItem_transacao(String item_transacao) {
+		this.item_transacao = item_transacao;
+	}
 
 	@Override
 	public String toString() {
 		return "Faturamento [id=" + id + ", idUsuario=" + idUsuario + ", idJogo=" + idJogo + ", idTransacao="
-				+ idTransacao + ", dataCriacao=" + dataCriacao + ", quantidade=" + quantidade + ", valorTotal="
-				+ valorTotal + ", ultimaAtualizacao=" + ultimaAtualizacao + ", status=" + status + "]";
+				+ idTransacao + ", item_transacao=" + item_transacao + ", dataCriacao=" + dataCriacao + ", quantidade="
+				+ quantidade + ", valorTotal=" + valorTotal + ", ultimaAtualizacao=" + ultimaAtualizacao + ", status="
+				+ status + "]";
 	}
+
+	
 
 }

@@ -30,6 +30,7 @@ import servidor.torcedor.digital.repositories.IngressoRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
 import servidor.torcedor.digital.utils.DateNow;
+import servidor.torcedor.digital.utils.PassRandom;
 import servidor.torcedor.digital.utils.SenderMailService;
 import servidor.torcedor.digital.models.Faturamento;
 import servidor.torcedor.digital.models.Ingresso;
@@ -96,10 +97,10 @@ public class FaturamentoDAO {
 	public Faturamento buscaFatura(String transacao) {
 		
 		try {
-			String sql = "SELECT * FROM faturamento WHERE id_transacao=:transacao limit 1";
+			String sql = "SELECT * FROM faturamento WHERE item_transacao=:item_transacao limit 1";
 			return 	(Faturamento) em
 					.createNativeQuery(sql, Faturamento.class)
-					.setParameter("transacao", transacao).getSingleResult();
+					.setParameter("item_transacao", transacao).getSingleResult();
 					
 			
 		} catch (Exception e) {
@@ -191,14 +192,14 @@ public class FaturamentoDAO {
 			fatura.setStatus(response.getPayment_status());
 			fatura.setUltimaAtualizacao(Timestamp.valueOf(DateNow.getDateNow()));
 			
-			preTicket(response, fatura.getIdTransacao(), usuario.getId());
+			preTicket(response, fatura.getItem_transacao(), usuario.getId());
 			return repo.save(fatura);
 		}
 		
 		Faturamento novo = novaFatura(response, usuario);
 		
 		// fução para criação de ticket
-		preTicket(response, novo.getIdTransacao(), usuario.getId());
+		preTicket(response, novo.getItem_transacao(), usuario.getId());
 				
 		senderMailService.send(email, "Obrigado por Compra seu ingresso pelo Torcedor Digital","Assim que confirmamos o pagamento estaremos enviado o seu ingresso.");
 		
@@ -249,6 +250,7 @@ public class FaturamentoDAO {
 
 	private Faturamento novaFatura(ResponseNotification response, Usuario usuario) {
 		Faturamento cartaFatura = new Faturamento();
+		cartaFatura.setItem_transacao(PassRandom.getRandomPass(30));
 		cartaFatura.setIdUsuario(usuario.getId());
 		cartaFatura.setIdTransacao(response.getTxn_id());
 		cartaFatura.setIdJogo(Long.valueOf(response.getCustom()));
