@@ -36,7 +36,7 @@ public class checkoutController {
 		return "checkout";
 	}
 	
-@RequestMapping(value = "/checkout/success")
+@RequestMapping(value = "/success")
 	
 	public String checkoutSuccess(Model model, @RequestParam String email,@RequestParam String id_jogo, @RequestParam Integer quantidade, HttpServletResponse res) throws ParseException  {
 		
