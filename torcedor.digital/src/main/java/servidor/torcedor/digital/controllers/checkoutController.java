@@ -38,19 +38,7 @@ public class checkoutController {
 	
 @RequestMapping(value = "/success")
 	
-	public String checkoutSuccess(Model model, @RequestParam String email,@RequestParam String id_jogo, @RequestParam Integer quantidade, HttpServletResponse res) throws ParseException  {
-		
-		try {
-			
-			model.addAttribute("email", email);
-			model.addAttribute("id_jogo", id_jogo);
-			model.addAttribute("quantidade", quantidade);
-			model.addAttribute("valor", valor);
-			model.addAttribute("item_transacao", PassRandom.getRandomPass(30));
-			
-		} catch (Exception e) {
-			return JsonTransform.jsonError(res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Falha na criação de checkout");
-		}
+	public String checkoutSuccess(Model model, HttpServletResponse res) throws ParseException  {
 		return "checkoutSucess";
 	}
 
