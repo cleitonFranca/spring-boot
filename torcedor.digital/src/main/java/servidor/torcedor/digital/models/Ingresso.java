@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-@Entity
+@Entity(name="ingressos")
 public class Ingresso implements Serializable {
 
 	private static final long serialVersionUID = 1612359462992212627L;
@@ -23,8 +23,8 @@ public class Ingresso implements Serializable {
 	@Column(name="id_usuario")
 	private Long idUsuario;
 	@NotNull
-	@Column(name="id_transacao")
-	private String idTransacao;
+	@Column(name="item_transacao")
+	private String itemTransacao;
 	@NotNull
 	@Column(name="id_jogo")
 	private Long idJogo;
@@ -85,12 +85,12 @@ public class Ingresso implements Serializable {
 		this.status = status;
 	}
 	
-	public String getIdTransacao() {
-		return idTransacao;
+	public String getItemTransacao() {
+		return itemTransacao;
 	}
 
-	public void setIdTransacao(String idTransacao) {
-		this.idTransacao = idTransacao;
+	public void setItemTransacao(String itemTransacao) {
+		this.itemTransacao = itemTransacao;
 	}
 
 	public Long getIdJogo() {
@@ -103,9 +103,12 @@ public class Ingresso implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ingresso [id=" + id + ", idUsuario=" + idUsuario + ", idTransacao=" + idTransacao + ", idJogo=" + idJogo
-				+ ", dataInicio=" + dataInicio + ", dataFim=" + dataFim + ", url=" + url + ", status=" + status + "]";
+		return "Ingresso [id=" + id + ", idUsuario=" + idUsuario + ", itemTransacao=" + itemTransacao + ", idJogo="
+				+ idJogo + ", dataInicio=" + dataInicio + ", dataFim=" + dataFim + ", url=" + url + ", status=" + status
+				+ "]";
 	}
+
+	
 
 	
 	

@@ -233,7 +233,7 @@ public class FaturamentoDAO {
 		
 		for(int i = 0; i <= q; i++){			
 			Ingresso ticket = new Ingresso();
-			ticket.setIdTransacao(trancacao);
+			ticket.setItemTransacao(trancacao);
 			ticket.setIdJogo(Long.valueOf(response.getCustom()));
 			ticket.setIdUsuario(idUsuario);
 			ticket.setStatus(true);
