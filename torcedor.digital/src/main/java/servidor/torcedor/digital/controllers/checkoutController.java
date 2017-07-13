@@ -17,29 +17,29 @@ import servidor.torcedor.digital.utils.PassRandom;
 @Controller
 public class checkoutController {
 	private static final Double valor = 20.00;
-	
+
 	@RequestMapping(value = "/checkout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	
-	public String checkout(Model model, @RequestParam String email,@RequestParam String id_jogo, @RequestParam Integer quantidade, HttpServletResponse res) throws ParseException  {
-		
+	public String checkout(Model model, @RequestParam String email, @RequestParam String id_jogo,
+			@RequestParam Integer quantidade, HttpServletResponse res) throws ParseException {
+
 		try {
-			
+
 			model.addAttribute("email", email);
 			model.addAttribute("id_jogo", id_jogo);
 			model.addAttribute("quantidade", quantidade);
 			model.addAttribute("valor", valor);
 			model.addAttribute("item_transacao", PassRandom.getRandomPass(30));
-			
+
 		} catch (Exception e) {
-			return JsonTransform.jsonError(res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Falha na criação de checkout");
+			return JsonTransform.jsonError(res, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+					"Falha na criação de checkout");
 		}
 		return "checkout";
 	}
-	
-@RequestMapping(value = "/success")
-	
-	public String checkoutSuccess(Model model, HttpServletResponse res) throws ParseException  {
-		return "checkoutSucess";
+
+	@RequestMapping(value = "/success")
+	public String checkoutSuccess(Model model, HttpServletResponse res) throws ParseException {
+		return "checkoutSuccess";
 	}
 
 }

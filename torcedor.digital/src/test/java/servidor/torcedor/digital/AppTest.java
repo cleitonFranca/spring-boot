@@ -29,15 +29,18 @@ import com.google.gson.Gson;
 
 import junit.framework.Assert;
 import servidor.torcedor.digital.DAO.FaturamentoDAO;
+import servidor.torcedor.digital.DAO.IngressoDAO;
 import servidor.torcedor.digital.DAO.EnderecoDAO;
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.jdbc.FaturaJDBC;
 import servidor.torcedor.digital.jdbc.SimpleJdbcConection;
 import servidor.torcedor.digital.models.Faturamento;
+import servidor.torcedor.digital.models.Ingresso;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.models.ViewRankGeral;
+import servidor.torcedor.digital.repositories.IngressoRepository;
 import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
 import servidor.torcedor.digital.utils.CriptyEncode;
@@ -59,6 +62,9 @@ public class AppTest {
 
 	@Autowired
 	private FaturamentoDAO cartaFatura;
+	
+	@Autowired
+	private IngressoRepository ingressoRepo;
 
 	@Autowired
 	private RankRepository rank;
@@ -68,6 +74,9 @@ public class AppTest {
 
 	@Autowired
 	private UsuarioDAO dao;
+	
+	@Autowired
+	private IngressoDAO ingressoDAO;
 	
 	private Connection connect;
 
@@ -236,6 +245,29 @@ public class AppTest {
 		List<Faturamento> lista = jdbc.listFaturamento();
 		System.out.print("quatidade :"+lista.size());
 		System.out.println(lista);
+	}
+	
+	@Test
+	public void test_busca_ingresso_by_id_usuario() {
+		
+		Ingresso ingresso = (Ingresso) em.createNativeQuery("Select * from ingressos i where i.id_usuario = 138", Ingresso.class).setMaxResults(1).getSingleResult();
+		
+		System.out.println(ingresso);
+		System.out.println(ingresso.getJogo());
+		
+	}
+	
+	@Test
+	public void test_busca_lista_ingresso_by_id_usuario() {
+		
+		List<Ingresso> list = ingressoDAO.buscaIngressosByIdUsuario(138);
+		
+		for (Ingresso ingresso : list) {
+			System.out.println(ingresso);
+		}
+		
+		org.junit.Assert.assertTrue(list.size() > 0);
+		
 	}
 	
 	

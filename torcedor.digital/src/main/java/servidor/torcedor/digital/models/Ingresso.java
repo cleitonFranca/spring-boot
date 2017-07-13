@@ -2,13 +2,21 @@ package servidor.torcedor.digital.models;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cascade;
 
 @Entity(name="ingressos")
 public class Ingresso implements Serializable {
@@ -36,6 +44,19 @@ public class Ingresso implements Serializable {
 	private String url;
 	
 	private boolean status;
+	
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(name="id_jogo", referencedColumnName="id", insertable=false, updatable=false)
+	private Calendario jogo;
+
+	
+	public Calendario getJogo() {
+		return jogo;
+	}
+
+	public void setJogo(Calendario jogo) {
+		this.jogo = jogo;
+	}
 
 	public Long getId() {
 		return id;
@@ -105,8 +126,10 @@ public class Ingresso implements Serializable {
 	public String toString() {
 		return "Ingresso [id=" + id + ", idUsuario=" + idUsuario + ", itemTransacao=" + itemTransacao + ", idJogo="
 				+ idJogo + ", dataInicio=" + dataInicio + ", dataFim=" + dataFim + ", url=" + url + ", status=" + status
-				+ "]";
+				+ ", jogo=" + jogo + "]";
 	}
+
+	
 
 	
 

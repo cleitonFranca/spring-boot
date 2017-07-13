@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Calendario implements Serializable {
@@ -42,7 +44,7 @@ public class Calendario implements Serializable {
 	private String resultadoPenaltiVisitante;
 	
 	
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -120,6 +122,10 @@ public class Calendario implements Serializable {
 				+ ", resultatoPenaltiCasa=" + resultatoPenaltiCasa + ", resultadoPenaltiVisitante="
 				+ resultadoPenaltiVisitante + "]";
 	}
+	
+	
+	
+	
 	
 	
 	
