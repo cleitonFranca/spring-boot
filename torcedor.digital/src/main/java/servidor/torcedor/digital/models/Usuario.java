@@ -46,6 +46,8 @@ public class Usuario implements Serializable {
 	
 	private Timestamp atualizacao;
 	
+	private String img;
+	
 	
 	public Timestamp getCriacao() {
 		return criacao;
@@ -127,12 +129,22 @@ public class Usuario implements Serializable {
 		this.tipo = tipo;
 	}
 
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
 	@Override
 	public String toString() {
 		return "Usuario [id=" + id + ", nome=" + nome + ", sobreNome=" + sobreNome + ", email=" + email + ", telefone="
-				+ telefone + ", cpf=" + cpf + ", senha=" + senha + ", tipo=" + tipo + "]";
+				+ telefone + ", cpf=" + cpf + ", senha=" + senha + ", tipo=" + tipo + ", criacao=" + criacao
+				+ ", atualizacao=" + atualizacao + ", img=" + img + "]";
 	}
-
+	
+	
 	
 
 }

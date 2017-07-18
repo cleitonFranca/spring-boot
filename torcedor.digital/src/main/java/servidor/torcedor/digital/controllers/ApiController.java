@@ -101,6 +101,18 @@ public class ApiController {
 		
 		return gson.toJson(image);
 	}
+	
+	@RequestMapping(value="/upload/salvarNoBanco", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String salvarNoBanco(@RequestParam("local") String local, @RequestParam("email") String email) throws IOException {
+		
+		Usuario usuario = usuarioDao.buscaUsuarioPorEmail(email);
+		
+		usuario.setImg(local);
+		repository.save(usuario);
+		
+		return "{\"msg\":\"sucess\"}";
+	}
 
 	@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
