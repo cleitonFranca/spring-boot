@@ -26,11 +26,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import servidor.torcedor.digital.DAO.FaturamentoDAO;
+import servidor.torcedor.digital.DAO.IngressoDAO;
 import servidor.torcedor.digital.DAO.EnderecoDAO;
 import servidor.torcedor.digital.DAO.UsuarioDAO;
 import servidor.torcedor.digital.DAO.ViewRankDAO;
 import servidor.torcedor.digital.models.Calendario;
 import servidor.torcedor.digital.models.Faturamento;
+import servidor.torcedor.digital.models.Ingresso;
 import servidor.torcedor.digital.models.DTOImage;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Usuario;
@@ -75,6 +77,9 @@ public class ApiController {
 
 	@Autowired
 	private ViewRankDAO rankDao;
+	
+	@Autowired
+	private IngressoDAO ingressoDAO;
 
 	@Autowired
 	private SenderMailService senderMailService;
@@ -328,6 +333,17 @@ public class ApiController {
 
 		return now.toString();
 	}
+	
+	@RequestMapping(value = "/ingressos", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String ingressos(@RequestParam("email") String email) throws IOException {
+		Usuario usuario = usuarioDao.buscaUsuarioPorEmail(email);
+		Gson json = new Gson();
+		List<Ingresso> list = ingressoDAO.buscaIngressosByIdUsuario(usuario.getId().intValue());
+		return json.toJson(list);
+	}
+	
+	
 
 }
 

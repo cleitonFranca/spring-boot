@@ -270,6 +270,20 @@ public class AppTest {
 		
 	}
 	
+	@Test
+	public void test_busca_lista_ingresso_by_id_usuario_transform_json() {
+		Gson json = new Gson();
+		
+		List<Ingresso> list = ingressoDAO.buscaIngressosByIdUsuario(138);
+		
+		String doc = json.toJson(list);
+		
+		System.out.println(doc);
+		
+		org.junit.Assert.assertTrue(list.size() > 0);
+		
+	}
+	
 	
 
 }
