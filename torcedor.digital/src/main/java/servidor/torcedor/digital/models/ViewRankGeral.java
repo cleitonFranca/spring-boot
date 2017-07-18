@@ -22,6 +22,9 @@ public class ViewRankGeral implements Serializable{
 	
 	@Column(name="pontos")
 	private double pontos;
+	
+	@Column(name="img")
+	private String img;
 
 	
 	
@@ -54,11 +57,23 @@ public class ViewRankGeral implements Serializable{
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
 
 	@Override
 	public String toString() {
-		return "ViewRankGeral [id=" + id + ", nome=" + nome + ", pontos=" + pontos + "]";
+		return "ViewRankGeral [id=" + id + ", nome=" + nome + ", pontos=" + pontos + ", img=" + img + "]";
 	}
+
+	
 
 	
 	
