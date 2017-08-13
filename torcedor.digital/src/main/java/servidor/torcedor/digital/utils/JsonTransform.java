@@ -15,6 +15,8 @@ import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.models.ViewRankGeral;
+import servidor.torcedor.digital.models.ViewRankMensal;
+import servidor.torcedor.digital.models.ViewRankSemanal;
 
 public class JsonTransform {
 	
@@ -42,6 +44,26 @@ public class JsonTransform {
 	}
 	
 	public static String jsonListRank(List<ViewRankGeral> listRank) {
+		
+		Gson gson = new Gson();
+		
+		String json = gson.toJson(listRank);
+
+		
+		return json;
+	}
+	
+	public static String jsonListRankSemanal(List<ViewRankSemanal> listRank) {
+		
+		Gson gson = new Gson();
+		
+		String json = gson.toJson(listRank);
+
+		
+		return json;
+	}
+	
+	public static String jsonListRankMensal(List<ViewRankMensal> listRank) {
 		
 		Gson gson = new Gson();
 		

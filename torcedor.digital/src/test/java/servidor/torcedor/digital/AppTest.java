@@ -40,6 +40,8 @@ import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Rank;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.models.ViewRankGeral;
+import servidor.torcedor.digital.models.ViewRankMensal;
+import servidor.torcedor.digital.models.ViewRankSemanal;
 import servidor.torcedor.digital.repositories.IngressoRepository;
 import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
@@ -157,6 +159,50 @@ public class AppTest {
 	public void test_List_rank_geral() {
 
 		List<ViewRankGeral> list = this.em.createNativeQuery("" + "select * from rank_geral", ViewRankGeral.class)
+				.getResultList();
+
+		Gson gson = new Gson();
+
+		String json = gson.toJson(list);
+
+		// [ViewRankGeral [id=4, nome=Cleiton, pontos=686.644348], ViewRankGeral
+		// [id=48, nome=Dilma França, pontos=100.0], ViewRankGeral [id=65,
+		// nome=Pedro, pontos=100.0]]
+
+		// {ViewRankGeral:[{id:4, nome:Cleiton, pontos:686.64},{}]}
+
+		System.out.println(list);
+		System.out.println(json);
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void test_List_rank_semanal() {
+
+		List<ViewRankSemanal> list = this.em.createNativeQuery("" + "select * from rank_semanal", ViewRankSemanal.class)
+				.getResultList();
+
+		Gson gson = new Gson();
+
+		String json = gson.toJson(list);
+
+		// [ViewRankGeral [id=4, nome=Cleiton, pontos=686.644348], ViewRankGeral
+		// [id=48, nome=Dilma França, pontos=100.0], ViewRankGeral [id=65,
+		// nome=Pedro, pontos=100.0]]
+
+		// {ViewRankGeral:[{id:4, nome:Cleiton, pontos:686.64},{}]}
+
+		System.out.println(list);
+		System.out.println(json);
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void test_List_rank_mensal() {
+
+		List<ViewRankMensal> list = this.em.createNativeQuery("" + "select * from rank_mensal", ViewRankMensal.class)
 				.getResultList();
 
 		Gson gson = new Gson();

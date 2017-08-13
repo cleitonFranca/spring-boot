@@ -37,6 +37,8 @@ import servidor.torcedor.digital.models.DTOImage;
 import servidor.torcedor.digital.models.Endereco;
 import servidor.torcedor.digital.models.Usuario;
 import servidor.torcedor.digital.models.ViewRankGeral;
+import servidor.torcedor.digital.models.ViewRankMensal;
+import servidor.torcedor.digital.models.ViewRankSemanal;
 import servidor.torcedor.digital.repositories.CalendarioRepository;
 import servidor.torcedor.digital.repositories.RankRepository;
 import servidor.torcedor.digital.repositories.UsuarioRepository;
@@ -235,8 +237,6 @@ public class ApiController {
 		String json = "";
 		String senha = ""; 
 		
-		System.out.println(u);
-
 		// verificando se usuario vindo da aplicação tem senha caso contrário cria uma nova senha 
 		if(!Strings.isNullOrEmpty(u.getSenha())) {
 			senha = u.getSenha();
@@ -281,6 +281,32 @@ public class ApiController {
 		}
 
 		return JsonTransform.jsonListRank(rankGeral);
+	}
+	
+	@RequestMapping(value = "/rankSemanal", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String rankSemanal(HttpServletResponse res) {
+
+		List<ViewRankSemanal> rankGeral = rankDao.getRankSemanal();
+
+		if (rankGeral.size() <= 0) {
+			return JsonTransform.jsonError(res, HttpServletResponse.SC_NOT_FOUND, "Não há resgistros!");
+		}
+
+		return JsonTransform.jsonListRankSemanal(rankGeral);
+	}
+	
+	@RequestMapping(value = "/rankMensal", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@ResponseBody
+	public String rankMensal(HttpServletResponse res) {
+
+		List<ViewRankMensal> rankGeral = rankDao.getRankMensal();
+
+		if (rankGeral.size() <= 0) {
+			return JsonTransform.jsonError(res, HttpServletResponse.SC_NOT_FOUND, "Não há resgistros!");
+		}
+
+		return JsonTransform.jsonListRankMensal(rankGeral);
 	}
 	
 	@RequestMapping(value = "/pontuarPorConvite", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
