@@ -1,10 +1,10 @@
 -- Table: public.calendario
 
- DROP TABLE public.calendario;
+DROP TABLE public.calendario;
 
 CREATE TABLE public.calendario
 (
-  id integer NOT NULL DEFAULT nextval('calendario_id_seq'::regclass),
+  id serial NOT NULL,
   time_casa character varying(100),
   time_visitante character varying(100),
   img_casa character varying(300),
@@ -22,13 +22,15 @@ WITH (
 );
 ALTER TABLE public.calendario
   OWNER TO postgres;
--- Table: public.endereco
 
- DROP TABLE public.endereco;
+  
+  -- Table: public.endereco
+
+DROP TABLE public.endereco;
 
 CREATE TABLE public.endereco
 (
-  id integer NOT NULL DEFAULT nextval('endereco_id_seq'::regclass),
+  id serial NOT NULL,
   id_usuario integer NOT NULL,
   cep character varying(50) NOT NULL,
   estado character varying(50),
@@ -49,16 +51,19 @@ WITH (
 );
 ALTER TABLE public.endereco
   OWNER TO postgres;
--- Table: public.faturamento
 
- DROP TABLE public.faturamento;
+  
+  -- Table: public.faturamento
+
+DROP TABLE public.faturamento;
 
 CREATE TABLE public.faturamento
 (
-  id integer NOT NULL DEFAULT nextval('faturamento_id_seq'::regclass),
+  id serial NOT NULL,
   id_usuario integer NOT NULL,
   id_jogo integer NOT NULL,
   id_transacao character varying(100),
+  item_transacao character varying(100),
   quantidade integer NOT NULL,
   valor_total real NOT NULL,
   data_criacao timestamp with time zone,
@@ -74,15 +79,17 @@ WITH (
 );
 ALTER TABLE public.faturamento
   OWNER TO postgres;
--- Table: public.ingressos
 
--- DROP TABLE public.ingressos;
+  
+  -- Table: public.ingressos
+DROP TABLE public.ingressos;
 
 CREATE TABLE public.ingressos
 (
-  id integer NOT NULL DEFAULT nextval('ingressos_id_seq'::regclass),
+  id serial NOT NULL,
   id_usuario bigint NOT NULL,
-  id_fatura bigint NOT NULL,
+  item_transacao character varying(200) NOT NULL,
+  id_jogo bigint NOT NULL,
   data_inicio timestamp with time zone,
   data_fim timestamp with time zone,
   url character varying(500),
@@ -91,24 +98,23 @@ CREATE TABLE public.ingressos
   CONSTRAINT id_usuario_fk FOREIGN KEY (id_usuario)
       REFERENCES public.usuarios (id) MATCH SIMPLE
       ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT url_unique UNIQUE (url)
+  CONSTRAINT ingressos_id_jogo_fkey FOREIGN KEY (id_jogo)
+      REFERENCES public.calendario (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
 ALTER TABLE public.ingressos
-  OWNER TO torcedordigital;
-
-
-ALTER TABLE public.ingressos
   OWNER TO postgres;
--- Table: public.rank
+
+  -- Table: public.rank
 
  DROP TABLE public.rank;
 
 CREATE TABLE public.rank
 (
-  id integer NOT NULL DEFAULT nextval('rank_id_seq'::regclass),
+  id serial NOT NULL,
   id_usuario bigint NOT NULL,
   pontos real NOT NULL,
   atualizado timestamp with time zone NOT NULL,
@@ -125,7 +131,7 @@ ALTER TABLE public.rank
 
 -- Index: public.fki_usuario
 
--- DROP INDEX public.fki_usuario;
+ DROP INDEX public.fki_usuario;
 
 CREATE INDEX fki_usuario
   ON public.rank
@@ -138,7 +144,7 @@ CREATE INDEX fki_usuario
 
 CREATE TABLE public.telefone
 (
-  id integer NOT NULL DEFAULT nextval('telefone_id_seq'::regclass),
+  id serial NOT NULL,
   id_usuario integer NOT NULL,
   numero character varying(20) NOT NULL,
   CONSTRAINT telefone_pkey PRIMARY KEY (id),
@@ -151,13 +157,15 @@ WITH (
 );
 ALTER TABLE public.telefone
   OWNER TO postgres;
--- Table: public.usuarios
+
+  
+  -- Table: public.usuarios
 
  DROP TABLE public.usuarios;
 
 CREATE TABLE public.usuarios
 (
-  id bigint NOT NULL DEFAULT nextval('usuarios_id_seq'::regclass),
+  id serial NOT NULL,
   nome character varying(200) NOT NULL,
   sobre_nome character varying(200),
   email character varying(200) NOT NULL,
@@ -167,6 +175,7 @@ CREATE TABLE public.usuarios
   tipo character varying(20),
   criacao timestamp with time zone,
   atualizacao timestamp with time zone,
+  img character(200),
   CONSTRAINT id_pk PRIMARY KEY (id),
   CONSTRAINT email_unico UNIQUE (email)
 )
@@ -176,3 +185,55 @@ WITH (
 ALTER TABLE public.usuarios
   OWNER TO postgres;
 
+  -- View: public.rank_geral
+
+ DROP VIEW public.rank_geral;
+
+CREATE OR REPLACE VIEW public.rank_geral AS 
+ SELECT u.id,
+    u.nome,
+    u.img,
+    sum(r.pontos) AS pontos
+   FROM rank r
+     JOIN usuarios u ON r.id_usuario = u.id
+  GROUP BY u.id
+  ORDER BY (sum(r.pontos)) DESC;
+
+ALTER TABLE public.rank_geral
+  OWNER TO postgres;
+
+  -- View: public.rank_mensal
+
+ DROP VIEW public.rank_mensal;
+
+CREATE OR REPLACE VIEW public.rank_mensal AS 
+ SELECT u.id,
+    u.nome,
+    u.img,
+    sum(r.pontos) AS pontos
+   FROM rank r
+     JOIN usuarios u ON r.id_usuario = u.id
+  WHERE r.atualizado >= ('now'::text::date - 30) AND r.atualizado <= 'now'::text::date
+  GROUP BY u.id
+  ORDER BY (sum(r.pontos)) DESC;
+
+ALTER TABLE public.rank_mensal
+  OWNER TO postgres;
+
+  -- View: public.rank_semanal
+
+ DROP VIEW public.rank_semanal;
+
+CREATE OR REPLACE VIEW public.rank_semanal AS 
+ SELECT u.id,
+    u.nome,
+    u.img,
+    sum(r.pontos) AS pontos
+   FROM rank r
+     JOIN usuarios u ON r.id_usuario = u.id
+  WHERE r.atualizado >= ('now'::text::date - 7) AND r.atualizado <= 'now'::text::date
+  GROUP BY u.id
+  ORDER BY (sum(r.pontos)) DESC;
+
+ALTER TABLE public.rank_semanal
+  OWNER TO postgres;

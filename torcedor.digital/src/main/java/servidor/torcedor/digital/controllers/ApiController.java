@@ -231,10 +231,17 @@ public class ApiController {
 	@ResponseBody
 	public String cadastrarUsuarioByFacebook(@ModelAttribute("Usuario") Usuario u, HttpServletResponse res)
 			throws Exception {
-		String json = "";
 		Usuario usuario = new Usuario();
-		String senha = PassRandom.getRandomPass(6);
+		String json = "";
+		String senha = ""; 
 
+		// verificando se usuario vindo da aplicação tem senha caso contrário cria uma nova senha 
+		if(!Strings.isNullOrEmpty(u.getSenha())) {
+			senha = u.getSenha();
+		} else {
+			senha = PassRandom.getRandomPass(6);
+		}
+		
 		usuario.setNome(u.getNome());
 		usuario.setEmail(u.getEmail());
 		usuario.setSenha(CriptyEncode.encodeSha256Hex(senha));
