@@ -234,6 +234,8 @@ public class ApiController {
 		Usuario usuario = new Usuario();
 		String json = "";
 		String senha = ""; 
+		
+		System.out.println(u);
 
 		// verificando se usuario vindo da aplicação tem senha caso contrário cria uma nova senha 
 		if(!Strings.isNullOrEmpty(u.getSenha())) {
