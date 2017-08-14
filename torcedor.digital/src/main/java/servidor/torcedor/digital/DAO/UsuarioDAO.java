@@ -28,7 +28,7 @@ public class UsuarioDAO {
 		try {
 			return (Usuario) em
 					.createNativeQuery("SELECT * FROM usuarios WHERE email=:email and senha=:senha", Usuario.class)
-					.setParameter("email", u.getEmail())
+					.setParameter("email",  u.getEmail().toLowerCase())
 					.setParameter("senha", CriptyEncode.encodeSha256Hex(u.getSenha()))
 					.getSingleResult();
 
